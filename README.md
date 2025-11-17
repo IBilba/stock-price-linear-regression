@@ -1,84 +1,121 @@
+# ΠΡΟΒΛΕΨΗ ΤΙΜΩΝ ΜΕΤΟΧΩΝ NFLX ΜΕ ΓΡΑΜΜΙΚΗ ΠΑΛΙΝΔΡΟΜΗΣΗ
+
 # NFLX Stock Price Prediction with Linear Regression
 
+**Στατιστικές Μέθοδοι Μηχανικής Μάθησης - Εργασία 1**  
 **Statistical Methods of Machine Learning - Task 1**
 
-## Project Overview
+---
 
-This project implements a comprehensive machine learning pipeline to predict Netflix (NFLX) stock prices using linear regression and various advanced techniques. The project addresses all four tasks from the assignment:
+## ΕΠΙΣΚΟΠΗΣΗ ΕΡΓΟΥ / PROJECT OVERVIEW
 
-- **Task A**: Baseline Linear Regression
-- **Task B**: Polynomial Regression with L1/L2 Regularization
-- **Task C**: Dimensionality Reduction (PCA, CFS, Wrapper Methods)
-- **Task D**: Future Price Predictions (December 2025)
+Αυτό το έργο υλοποιεί μια ολοκληρωμένη διαδικασία μηχανικής μάθησης για πρόβλεψη τιμών μετοχών Netflix (NFLX) χρησιμοποιώντας γραμμική παλινδρόμηση και διάφορες προηγμένες τεχνικές.
 
-**Stock Symbol**: NFLX (Netflix, Inc.)  
-**Sector**: Communication Services  
-**Data Source**: Alpha Vantage API
+This project implements a comprehensive machine learning pipeline to predict Netflix (NFLX) stock prices using linear regression and various advanced techniques.
 
-## Key Results Summary
+### Εργασίες / Tasks
 
-### Best Model Configuration
+- **Εργασία Α / Task A**: Baseline Γραμμική Παλινδρόμηση / Baseline Linear Regression
+- **Εργασία Β / Task B**: Πολυωνυμική Παλινδρόμηση με L1/L2 Κανονικοποίηση / Polynomial Regression with L1/L2 Regularization
+- **Εργασία Γ / Task C**: Μείωση Διαστάσεων (PCA, CFS, Wrapper) / Dimensionality Reduction (PCA, CFS, Wrapper Methods)
+- **Εργασία Δ / Task D**: Προβλέψεις Μελλοντικών Τιμών (Δεκέμβριος 2025, Ιανουάριος 2026) / Future Price Predictions (December 2025, January 2026)
 
-- **Model**: Linear Regression
-- **Preprocessing**: Gaussian Smoothing (σ=3)
-- **Lag Window**: 12 months
-- **Features**: 24 (12 close price lags + 12 volume lags)
+**Σύμβολο Μετοχής / Stock Symbol**: NFLX (Netflix, Inc.)  
+**Τομέας / Sector**: Communication Services  
+**Πηγή Δεδομένων / Data Source**: Alpha Vantage API
 
-### Performance Metrics
+---
 
+## ΣΥΝΟΛΙΚΑ ΑΠΟΤΕΛΕΣΜΑΤΑ / COMPREHENSIVE RESULTS
+
+### 📊 Μοντέλα που Αναλύθηκαν / Models Analyzed
+
+**Συνολικά Μοντέλα / Total Models: 96**
+
+- ✅ **16 Baseline** Linear Regression μοντέλα (4 smoothing × 4 lags)
+- ✅ **32 Polynomial** Regression μοντέλα (Ridge + Lasso για κάθε ρύθμιση / for each config)
+- ✅ **48 Dimensionality Reduction** μοντέλα (PCA + CFS + Sequential Forward Selection)
+
+### 🏆 ΚΑΛΥΤΕΡΑ ΜΟΝΤΕΛΑ / BEST MODELS
+
+#### 1. Καλύτερο Baseline / Best Baseline
+
+- **Μοντέλο / Model**: Linear Regression
+- **Προεπεξεργασία / Preprocessing**: Gaussian Smoothing (σ=3)
+- **Παράθυρο Υστέρησης / Lag Window**: 12 μήνες / months
+- **Χαρακτηριστικά / Features**: 24 (12 close price lags + 12 volume lags)
 - **Training RMSE**: $0.02
 - **Training R²**: 1.0000
 - **Validation RMSE**: $0.03
 - **Validation R²**: 1.0000
 
-### Future Prediction
+#### 2. Καλύτερο Polynomial / Best Polynomial
 
-- **December 2025**: $1,175.48
+- **Μοντέλο / Model**: Ridge Regression (Degree 2)
+- **Ρύθμιση / Configuration**: sigma3, 9 lags
+- **Alpha**: 0.001
+- **Validation RMSE**: $4.19
+- **Validation R²**: 0.9978
 
-## Project Structure
+#### 3. Καλύτερο Dimensionality Reduction / Best Dim-Reduction
+
+- **Μέθοδος / Method**: Sequential Forward Selection
+- **Ρύθμιση / Configuration**: sigma3, 12 lags
+- **Χαρακτηριστικά / Features**: 12 (μειωμένα από 24 / reduced from 24)
+- **Validation RMSE**: $0.03
+- **Validation R²**: 1.0000
+
+### 🔮 ΠΡΟΒΛΕΨΕΙΣ ΜΕΛΛΟΝΤΙΚΩΝ ΤΙΜΩΝ / FUTURE PREDICTIONS
+
+**Δεκέμβριος 2025 / December 2025**: $1,175.48  
+**Ιανουάριος 2026 / January 2026**: $1,175.95
+
+_Βασισμένες στο καλύτερο baseline μοντέλο (sigma3, 12 lags)_  
+_Based on best baseline model (sigma3, 12 lags)_
+
+---
+
+## ΔΟΜΗ ΕΡΓΟΥ / PROJECT STRUCTURE
 
 ```
 stock-price-linear-regression/
 │
-├── step1_data_acquisition.py          # Data fetching and preprocessing
-├── step2_feature_engineering.py       # Lagged feature creation
-├── step3_baseline_linear_regression.py # Task A implementation
-├── step4_polynomial_regression_regularization.py # Task B
-├── step5_dimensionality_reduction.py  # Task C implementation
-├── step6_future_predictions.py        # Task D and final report
+├── step1_data_acquisition.py          # Συλλογή & προεπεξεργασία δεδομένων / Data fetching & preprocessing
+├── step2_feature_engineering.py       # Δημιουργία χαρακτηριστικών με υστέρηση / Lagged feature creation
+├── step3_baseline_linear_regression.py # Εργασία Α / Task A implementation
+├── step4_polynomial_regression_regularization.py # Εργασία Β / Task B
+├── step5_dimensionality_reduction.py  # Εργασία Γ / Task C implementation
+├── step6_future_predictions_improved.py # Εργασία Δ & συνολική ανάλυση / Task D & comprehensive analysis
 │
-├── data/                              # Raw and processed data
-│   ├── nflx_monthly_raw.csv
+├── data/                              # Ακατέργαστα & επεξεργασμένα δεδομένα / Raw & processed data
+│   ├── nflx_monthly_raw.csv           # 283 μήνες δεδομένων / months of data
 │   ├── nflx_monthly_smoothed_sigma1.csv
 │   ├── nflx_monthly_smoothed_sigma2.csv
 │   ├── nflx_monthly_smoothed_sigma3.csv
 │   └── smoothing_comparison.png
 │
-├── features/                          # Feature matrices and scalers
-│   ├── features_*.npz (16 configurations)
+├── features/                          # Πίνακες χαρακτηριστικών & scalers / Feature matrices & scalers
+│   ├── features_*.npz (16 ρυθμίσεις / configurations)
 │   ├── scaler_*.pkl
 │   ├── metadata_*.csv
 │   └── train_val_split_*.png
 │
-├── models/                            # Trained models
+├── models/                            # Εκπαιδευμένα μοντέλα / Trained models
 │   ├── best_baseline_linear_regression.pkl
-│   ├── best_ridge_polynomial.pkl
-│   ├── best_lasso_polynomial.pkl
-│   └── dimensionality_reduction_models.pkl
+│   ├── all_polynomial_models.pkl      # 32 polynomial models
+│   └── all_dimensionality_reduction_models.pkl # 48 dim-reduction models
 │
-├── results/                           # Visualizations and reports
+├── results/                           # Απεικονίσεις & αναφορές / Visualizations & reports
+│   ├── baseline_linear_regression_results.csv (16 models)
+│   ├── polynomial_regression_all_models_results.csv (32 models)
+│   ├── dimensionality_reduction_all_models_results.csv (48 models)
+│   ├── baseline_predictions_dec_jan_2025_2026.csv
+│   ├── COMPREHENSIVE_96_MODELS_REPORT_EL_EN.txt
 │   ├── baseline_performance_by_config.png
-│   ├── baseline_r2_comparison.png
-│   ├── baseline_actual_vs_predicted.png
-│   ├── polynomial_regularization_paths.png
-│   ├── dimensionality_reduction_comparison.png
-│   ├── future_predictions_visualization.png
-│   ├── baseline_linear_regression_results.csv
-│   ├── polynomial_regression_comparison.csv
-│   ├── dimensionality_reduction_results.csv
-│   └── FINAL_PROJECT_SUMMARY.txt
+│   ├── comprehensive_predictions_comparison.png
+│   └── best_model_forecast_with_history.png
 │
-├── Provided Code/                     # Teacher's example code
+├── Provided Code/                     # Κώδικας παραδειγμάτων καθηγητή / Teacher's example code
 │   ├── data_acquisition.ipynb
 │   ├── regression_demo.ipynb
 │   ├── feature_selection.ipynb
@@ -86,329 +123,345 @@ stock-price-linear-regression/
 │   ├── training_L1_L2.ipynb
 │   └── ...
 │
-├── .env                               # API key configuration
-├── statistical_methods_of_ml.md       # Assignment description
-└── README.md                          # This file
+├── .env                               # Διαμόρφωση API key / API key configuration
+├── statistical_methods_of_ml.md       # Περιγραφή εργασίας / Assignment description
+├── ML_TERMINOLOGY_GLOSSARY_EL_EN.md   # Γλωσσάριο όρων / Terminology glossary
+└── README.md                          # Αυτό το αρχείο / This file
 ```
 
-## Installation & Setup
+---
 
-### Prerequisites
+## ΕΓΚΑΤΑΣΤΑΣΗ & ΡΥΘΜΙΣΗ / INSTALLATION & SETUP
+
+### Προαπαιτούμενα / Prerequisites
 
 ```bash
-Python 3.8 or higher
+Python 3.8 ή νεότερο / or higher
 ```
 
-### Required Libraries
+### Απαιτούμενες Βιβλιοθήκες / Required Libraries
 
 ```bash
 pip install numpy pandas scikit-learn scipy matplotlib requests python-dateutil
 ```
 
-### API Key Configuration
+### Διαμόρφωση API Key / API Key Configuration
 
-1. Sign up for a free Alpha Vantage API key at https://www.alphavantage.co/
-2. Create a `.env` file in the project root:
+1. Εγγραφείτε για δωρεάν Alpha Vantage API key στο / Sign up for a free Alpha Vantage API key at:  
+   https://www.alphavantage.co/
+
+2. Δημιουργήστε αρχείο `.env` στη ρίζα του project / Create a `.env` file in the project root:
 
 ```
 api_key=YOUR_API_KEY_HERE
 ```
 
-## Usage Instructions
+---
 
-### Complete Pipeline Execution
+## ΟΔΗΓΙΕΣ ΧΡΗΣΗΣ / USAGE INSTRUCTIONS
 
+### Πλήρης Εκτέλεση Pipeline / Complete Pipeline Execution
+
+Εκτελέστε όλα τα scripts με τη σειρά:  
 Run all scripts in sequence:
 
 ```bash
-# Step 1: Data Acquisition (fetches from Alpha Vantage)
+# Βήμα 1: Συλλογή Δεδομένων / Step 1: Data Acquisition
 python step1_data_acquisition.py
 
-# Step 2: Feature Engineering (creates 16 configurations)
+# Βήμα 2: Δημιουργία Χαρακτηριστικών / Step 2: Feature Engineering
 python step2_feature_engineering.py
 
-# Step 3: Baseline Linear Regression (Task A)
+# Βήμα 3: Baseline Γραμμική Παλινδρόμηση / Step 3: Baseline Linear Regression (Εργασία Α / Task A)
 python step3_baseline_linear_regression.py
 
-# Step 4: Polynomial Regression with Regularization (Task B)
+# Βήμα 4: Πολυωνυμική Παλινδρόμηση / Step 4: Polynomial Regression (Εργασία Β / Task B)
 python step4_polynomial_regression_regularization.py
 
-# Step 5: Dimensionality Reduction (Task C)
+# Βήμα 5: Μείωση Διαστάσεων / Step 5: Dimensionality Reduction (Εργασία Γ / Task C)
 python step5_dimensionality_reduction.py
 
-# Step 6: Future Predictions & Final Report (Task D)
-python step6_future_predictions.py
+# Βήμα 6: Προβλέψεις Μελλοντικών Τιμών / Step 6: Future Predictions (Εργασία Δ / Task D)
+python step6_future_predictions_improved.py
 ```
 
-### Individual Task Execution
+### Μεμονωμένη Εκτέλεση Βημάτων / Individual Step Execution
 
-Each script can be run independently if previous steps have been completed:
-
-```bash
-# Run only Task B (requires features/ directory)
-python step4_polynomial_regression_regularization.py
-
-# Run only Task D (requires models/ directory)
-python step6_future_predictions.py
-```
-
-## Methodology
-
-### 1. Data Acquisition & Preprocessing
-
-- **Data Source**: Alpha Vantage API (TIME_SERIES_DAILY)
-- **Time Range**: May 2002 - November 2025 (283 months)
-- **Aggregation**: Daily → Monthly averages
-- **Smoothing**: Gaussian filter with σ ∈ {1, 2, 3}
-- **Rationale**: Reduces noise while preserving trends
-
-### 2. Feature Engineering
-
-- **Lagged Features**:
-  - `close_t-1` through `close_t-N`: Past closing prices
-  - `volume_t-1` through `volume_t-N`: Past trading volumes
-- **Lag Windows Tested**: N ∈ {3, 6, 9, 12} months
-- **Scaling**: StandardScaler (z-score normalization)
-- **Train/Val Split**:
-  - Training: Pre-2025 (260-269 samples depending on N)
-  - Validation: 2025 (11 samples)
-  - **Critical**: Chronological split (no shuffling)
-
-### 3. Model Training & Evaluation
-
-#### Task A: Baseline Linear Regression
-
-- **Configurations Tested**: 16 (4 smoothing × 4 lag windows)
-- **Model**: Ordinary Least Squares (OLS) Linear Regression
-- **Metrics**: RMSE, MAE, R²
-- **Best**: sigma3, 12 lags → RMSE $0.03, R² 1.0000
-
-#### Task B: Polynomial Regression
-
-- **Degree**: 2 (24 features → 325 features)
-- **Ridge (L2)**:
-  - Best α: 0.1
-  - Val RMSE: $8.98
-  - All features retained
-- **Lasso (L1)**:
-  - Best α: 0.001
-  - Val RMSE: $9.47
-  - 263/325 features selected (19.1% sparsity)
-- **Conclusion**: Baseline outperforms due to effective smoothing
-
-#### Task C: Dimensionality Reduction
-
-1. **PCA (95% variance)**:
-
-   - 3 components
-   - Val RMSE: $131.07, R²: -1.17
-   - Poor performance (lost information)
-
-2. **CFS (Correlation-based)**:
-
-   - 1 feature (close_t-1)
-   - Val RMSE: $21.91, R²: 0.9392
-   - Surprisingly effective
-
-3. **Sequential Forward Selection**:
-
-   - 12 features (all close lags)
-   - Val RMSE: $0.03, R²: 1.0000
-   - Matched baseline performance
-
-4. **Conclusion**: Close lags sufficient; volume adds minimal value
-
-#### Task D: Future Predictions
-
-- **Method**: Best baseline model
-- **December 2025 Prediction**: $1,175.48
-- **January 2026**: Cannot predict (requires December 2025 actual data)
-
-## Key Findings
-
-### 1. Preprocessing is Critical
-
-Heavy Gaussian smoothing (σ=3) was the most important factor for success. It transformed noisy data into highly predictable patterns.
-
-### 2. Linear Models Sufficient
-
-With proper preprocessing, simple linear regression achieved near-perfect results. Complex polynomial features were unnecessary.
-
-### 3. Optimal Lookback Window
-
-12-month lag window captured both short-term momentum and long-term trends effectively.
-
-### 4. Feature Importance
-
-Close price lags far more informative than volume. Sequential Forward Selection confirmed this by selecting only close lags.
-
-### 5. PCA Limitations
-
-PCA failed on heavily smoothed data because:
-
-- Smoothing already reduced dimensionality conceptually
-- Linear transformation couldn't improve on smoothed features
-- Critical temporal information was lost in transformation
-
-## Visualizations Generated
-
-### Data & Features
-
-- `data/smoothing_comparison.png`: Effect of different σ values
-- `features/train_val_split_*.png`: Temporal data split visualization
-
-### Model Performance
-
-- `baseline_performance_by_config.png`: All 16 configurations compared
-- `baseline_r2_comparison.png`: R² scores across configurations
-- `baseline_actual_vs_predicted.png`: Scatter plots for best model
-- `polynomial_regularization_paths.png`: Alpha vs RMSE curves
-- `dimensionality_reduction_comparison.png`: All reduction methods
-
-### Predictions
-
-- `future_predictions_visualization.png`: Historical + predicted prices
-
-## Results Files
-
-### CSV Tables
-
-- `baseline_linear_regression_results.csv`: All configurations, sorted by validation RMSE
-- `polynomial_regression_comparison.csv`: Ridge & Lasso results for all α values
-- `dimensionality_reduction_results.csv`: PCA, CFS, Wrapper comparison
-
-### Final Report
-
-- `FINAL_PROJECT_SUMMARY.txt`: Comprehensive project summary with:
-  - All task results
-  - Model parameters
-  - Key findings
-  - Recommendations
-  - Limitations
-
-## Model Interpretation
-
-### Baseline Linear Model Equation
-
-```
-price(t) = β₀ + Σ(βᵢ · close_t-i) + Σ(γⱼ · volume_t-j)
-           i=1..12              j=1..12
-```
-
-### Top 5 Most Influential Features
-
-1. `close_t-4`: -$10,201 per std dev (oscillatory pattern)
-2. `close_t-3`: +$8,383 per std dev
-3. `close_t-5`: +$7,460 per std dev
-4. `close_t-2`: -$4,373 per std dev
-5. `close_t-8`: +$3,253 per std dev
-
-**Note**: Large coefficients due to high correlation in smoothed data. Coefficients show complex inter-dependencies rather than simple trends.
-
-## Limitations & Considerations
-
-### Model Limitations
-
-1. **Heavy Smoothing Trade-off**: May delay reaction to sudden market changes
-2. **Linear Assumption**: Assumes past patterns continue
-3. **External Events**: Cannot capture earnings reports, market crashes, news
-4. **Limited Validation**: Only 11 months of 2025 data
-
-### Data Limitations
-
-1. **API Rate Limits**: Free tier has 5 calls/min, 500/day
-2. **Historical Bias**: Model trained on 2002-2024 may not generalize to different market regimes
-3. **Monthly Aggregation**: Loses intra-month volatility information
-
-### Prediction Limitations
-
-1. **January 2026**: Requires December 2025 actual data (not yet available)
-2. **No Confidence Intervals**: Point predictions without uncertainty quantification
-3. **No Regime Detection**: Cannot identify when model becomes unreliable
-
-## Recommendations
-
-### For Production Use
-
-1. **Update Frequency**: Retrain model monthly with new data
-2. **Monitoring**: Track prediction errors to detect regime changes
-3. **Ensemble**: Combine predictions from multiple σ values
-4. **Confidence Intervals**: Add bootstrap or Bayesian methods
-5. **Feature Expansion**: Include market indices (S&P 500), sector performance
-
-### For Academic Extension
-
-1. **Multi-Stock Analysis**: Test generalization across different stocks
-2. **External Features**: Sentiment analysis, macroeconomic indicators
-3. **Non-Linear Models**: LSTM, GRU for capturing complex patterns
-4. **Online Learning**: Implement incremental updates
-5. **Uncertainty Quantification**: Bayesian regression, quantile regression
-
-## Technical Details
-
-### Computational Complexity
-
-- **Data Acquisition**: O(n) API calls + O(n) processing
-- **Feature Engineering**: O(n × m) where n=samples, m=features
-- **Linear Regression**: O(m² × n) for OLS solution
-- **Polynomial (degree 2)**: O((m²)² × n) ≈ O(m⁴ × n)
-- **Sequential Forward Selection**: O(m² × k) model trainings
-
-### Memory Requirements
-
-- **Raw Data**: ~5,000 daily records → ~1 MB
-- **Feature Matrices**: 16 configurations × 2 sets → ~10 MB
-- **Models**: < 1 MB total
-
-### Runtime (Approximate)
-
-- Step 1 (Data Acquisition): 30-60 seconds (API call)
-- Step 2 (Feature Engineering): 5-10 seconds
-- Step 3 (Baseline): 2-3 seconds
-- Step 4 (Polynomial): 5-10 seconds
-- Step 5 (Dimensionality): 30-60 seconds (Sequential Selection)
-- Step 6 (Predictions): 1-2 seconds
-
-**Total Runtime**: ~2-3 minutes
-
-## References
-
-### Assignment Requirements
-
-- Course: Statistical Methods of Machine Learning
-- Task: Predicting Stock Prices with Linear Regression
-- Symbol: NFLX (Netflix, Inc.)
-- API: Alpha Vantage (https://www.alphavantage.co/)
-
-### Key Libraries
-
-- **scikit-learn**: Machine learning models and metrics
-- **pandas**: Data manipulation and analysis
-- **numpy**: Numerical computing
-- **scipy**: Gaussian filtering (scipy.ndimage.gaussian_filter1d)
-- **matplotlib**: Visualization
-
-### Methodology Inspiration
-
-- Teacher's provided code (`Provided Code/` directory)
-- Scikit-learn documentation
-- Time series forecasting best practices
-
-## Contact & Support
-
-For questions or issues:
-
-1. Check the `FINAL_PROJECT_SUMMARY.txt` for detailed results
-2. Review inline code comments (extensive documentation)
-3. Consult provided code examples in `Provided Code/`
-
-## License
-
-This project was created for academic purposes as part of a Machine Learning course assignment.
+Κάθε script μπορεί να εκτελεστεί ανεξάρτητα αφού έχουν ολοκληρωθεί τα προηγούμενα βήματα.  
+Each script can be run independently after previous steps are completed.
 
 ---
 
-**Last Updated**: November 17, 2025  
-**Project Status**: Complete ✓
+## ΛΕΠΤΟΜΕΡΕΙΕΣ ΜΕΘΟΔΟΛΟΓΙΑΣ / METHODOLOGY DETAILS
 
-All tasks (A, B, C, D) successfully implemented with extensive documentation.
+### 1. Συλλογή & Προεπεξεργασία Δεδομένων / Data Acquisition & Preprocessing
+
+- **Πηγή / Source**: Alpha Vantage API (NFLX daily data)
+- **Χρονική Περίοδος / Time Period**: Μάιος 2002 - Νοέμβριος 2025 / May 2002 - November 2025
+- **Συνολικοί Μήνες / Total Months**: 283
+- **Smoothing**: Gaussian filter (σ = 0, 1, 2, 3)
+- **Μετρικές / Metrics**: Close price & Volume
+
+### 2. Δημιουργία Χαρακτηριστικών / Feature Engineering
+
+- **Χαρακτηριστικά με Υστέρηση / Lagged Features**: close_t-1, close_t-2, ..., close_t-N & volume_t-1, ..., volume_t-N
+- **Παράθυρα Υστέρησης που Δοκιμάστηκαν / Lag Windows Tested**: 3, 6, 9, 12 μήνες / months
+- **Διαίρεση Δεδομένων / Data Split**:
+  - Εκπαίδευση / Training: < 2025 (260-269 δείγματα / samples)
+  - Επικύρωση / Validation: 2025 (11 δείγματα / samples)
+- **Κανονικοποίηση / Normalization**: StandardScaler (fitted on training data only)
+
+### 3. Baseline Linear Regression (16 Μοντέλα / Models)
+
+**Ρυθμίσεις που Δοκιμάστηκαν / Configurations Tested:**
+
+- 4 smoothing levels (raw, sigma1, sigma2, sigma3)
+- 4 lag windows (3, 6, 9, 12 months)
+- **Σύνολο / Total**: 16 configurations
+
+**Καλύτερη Ρύθμιση / Best Configuration:**
+
+- sigma3, 12 lags → RMSE: $0.03, R²: 1.0000
+
+### 4. Polynomial Regression (32 Μοντέλα / Models)
+
+**Προσέγγιση / Approach:**
+
+- Δοκιμάστηκαν ΟΛΑ τα 16 baseline configurations / Tested ALL 16 baseline configurations
+- Πολυωνυμικά χαρακτηριστικά βαθμού 2 / Degree-2 polynomial features
+- Ridge (L2) και Lasso (L1) regularization
+- Grid search για alpha: [0.001, 0.01, 0.1, 1.0, 10.0]
+
+**Καλύτερο Μοντέλο / Best Model:**
+
+- sigma3, 9 lags, Ridge, α=0.001 → RMSE: $4.19, R²: 0.9978
+
+### 5. Dimensionality Reduction (48 Μοντέλα / Models)
+
+**Μέθοδοι / Methods:**
+
+1. **PCA**: 95% explained variance threshold
+2. **CFS**: Correlation-based Feature Selection
+3. **Sequential Forward Selection**: Wrapper method (50% features target)
+
+**Ανάλυση για ΟΛΑ τα 16 configurations / Applied to ALL 16 configurations**
+
+**Καλύτερο Μοντέλο / Best Model:**
+
+- sigma3, 12 lags, Forward Selection (12 features) → RMSE: $0.03, R²: 1.0000
+
+### 6. Προβλέψεις Μελλοντικών Τιμών / Future Predictions
+
+**Μεθοδολογία / Methodology:**
+
+- Καταρρακτώδης πρόβλεψη / Cascading prediction
+- Δεκέμβριος 2025: Χρήση ιστορικών δεδομένων / Using historical data
+- Ιανουάριος 2026: Χρήση πρόβλεψης Δεκεμβρίου ως input / Using December prediction as input
+
+---
+
+## ΒΑΣΙΚΑ ΕΥΡΗΜΑΤΑ / KEY FINDINGS
+
+### 1. Επίδραση Smoothing / Smoothing Impact
+
+✅ **sigma3 (Gaussian σ=3) παράγει τα καλύτερα αποτελέσματα / produces best results**
+
+- Μειώνει θόρυβο χωρίς απώλεια σημαντικών τάσεων / Reduces noise without losing important trends
+- Validation RMSE: $0.03 vs $78.81 (raw data)
+
+### 2. Παράθυρο Υστέρησης / Lag Window
+
+✅ **12 μήνες είναι βέλτιστο / 12 months is optimal**
+
+- Περισσότερα χαρακτηριστικά = καλύτερη πρόβλεψη / More features = better prediction
+- Αποφυγή overfitting λόγω κανονικοποίησης / Avoiding overfitting through regularization
+
+### 3. Σύγκριση Μοντέλων / Model Comparison
+
+| Κατηγορία / Category | Καλύτερο RMSE / Best RMSE | Πλεονεκτήματα / Advantages                                               |
+| -------------------- | ------------------------- | ------------------------------------------------------------------------ |
+| **Baseline**         | $0.03                     | Απλό, ερμηνεύσιμο / Simple, interpretable                                |
+| **Polynomial**       | $4.19                     | Συλλαμβάνει μη-γραμμικότητα / Captures non-linearity                     |
+| **Dim-Reduction**    | $0.03                     | Λιγότερα χαρακτηριστικά, ίδια απόδοση / Fewer features, same performance |
+
+### 4. Feature Selection
+
+✅ **Sequential Forward Selection επιτυγχάνει άριστα αποτελέσματα / achieves excellent results**
+
+- Μείωση από 24 → 12 χαρακτηριστικά / Reduction from 24 → 12 features
+- Διατήρηση R²=1.0000 / Maintaining R²=1.0000
+- Απλούστερο μοντέλο, ταχύτερη πρόβλεψη / Simpler model, faster prediction
+
+---
+
+## ΑΠΟΤΕΛΕΣΜΑΤΑ ΑΝΑ ΕΡΓΑΣΙΑ / RESULTS BY TASK
+
+### ✅ Εργασία Α / Task A: Baseline Linear Regression
+
+- **Εκπαιδευμένα Μοντέλα / Models Trained**: 16
+- **Καλύτερη Ρύθμιση / Best Config**: sigma3, 12 lags
+- **Validation RMSE**: $0.03
+- **Validation R²**: 1.0000
+
+### ✅ Εργασία Β / Task B: Polynomial Regression με Κανονικοποίηση / with Regularization
+
+- **Εκπαιδευμένα Μοντέλα / Models Trained**: 32 (16 Ridge + 16 Lasso)
+- **Καλύτερο Μοντέλο / Best Model**: Ridge (sigma3, 9 lags, α=0.001)
+- **Validation RMSE**: $4.19
+- **Validation R²**: 0.9978
+
+### ✅ Εργασία Γ / Task C: Μείωση Διαστάσεων / Dimensionality Reduction
+
+- **Εκπαιδευμένα Μοντέλα / Models Trained**: 48 (16 PCA + 16 CFS + 16 SFS)
+- **Καλύτερη Μέθοδος / Best Method**: Sequential Forward Selection
+- **Καλύτερη Ρύθμιση / Best Config**: sigma3, 12 lags (12 features)
+- **Validation RMSE**: $0.03
+- **Validation R²**: 1.0000
+
+### ✅ Εργασία Δ / Task D: Προβλέψεις Μελλοντικών Τιμών / Future Predictions
+
+- **Δεκέμβριος 2025 / December 2025**: $1,175.48
+- **Ιανουάριος 2026 / January 2026**: $1,175.95
+- **Μέθοδος / Method**: Καταρρακτώδης πρόβλεψη με καλύτερο baseline / Cascading prediction with best baseline
+
+---
+
+## ΑΡΧΕΙΑ ΑΝΑΦΟΡΩΝ / REPORT FILES
+
+1. **COMPREHENSIVE_96_MODELS_REPORT_EL_EN.txt**
+
+   - Δίγλωσση συνολική ανάλυση όλων των 96 μοντέλων
+   - Bilingual comprehensive analysis of all 96 models
+
+2. **baseline_linear_regression_results.csv**
+
+   - Αναλυτικά αποτελέσματα 16 baseline μοντέλων
+   - Detailed results for 16 baseline models
+
+3. **polynomial_regression_all_models_results.csv**
+
+   - Αναλυτικά αποτελέσματα 32 polynomial μοντέλων
+   - Detailed results for 32 polynomial models
+
+4. **dimensionality_reduction_all_models_results.csv**
+
+   - Αναλυτικά αποτελέσματα 48 dim-reduction μοντέλων
+   - Detailed results for 48 dim-reduction models
+
+5. **baseline_predictions_dec_jan_2025_2026.csv**
+   - Προβλέψεις για Δεκέμβριο 2025 & Ιανουάριο 2026
+   - Predictions for December 2025 & January 2026
+
+---
+
+## ΑΠΕΙΚΟΝΙΣΕΙΣ / VISUALIZATIONS
+
+### Δημιουργούμενα Γραφήματα / Generated Plots
+
+1. **Data Smoothing Comparison** (`smoothing_comparison.png`)
+
+   - Σύγκριση raw και smoothed data
+   - Comparison of raw and smoothed data
+
+2. **Baseline Performance** (`baseline_performance_by_config.png`)
+
+   - Απόδοση όλων των 16 baseline configurations
+   - Performance of all 16 baseline configurations
+
+3. **Comprehensive Predictions** (`comprehensive_predictions_comparison.png`)
+
+   - Σύγκριση προβλέψεων όλων των μοντέλων
+   - Comparison of predictions across all models
+
+4. **Best Model Forecast** (`best_model_forecast_with_history.png`)
+   - Ιστορικά δεδομένα + προβλέψεις καλύτερου μοντέλου
+   - Historical data + best model predictions
+
+---
+
+## ΤΕΧΝΙΚΕΣ ΛΕΠΤΟΜΕΡΕΙΕΣ / TECHNICAL DETAILS
+
+### Χρησιμοποιούμενες Βιβλιοθήκες / Libraries Used
+
+- **NumPy**: Αριθμητικοί υπολογισμοί / Numerical computations
+- **Pandas**: Χειρισμός δεδομένων / Data manipulation
+- **Scikit-learn**: Μοντέλα ML & μετρικές / ML models & metrics
+- **SciPy**: Gaussian filtering
+- **Matplotlib**: Απεικονίσεις / Visualizations
+- **Requests**: API calls
+
+### Αλγόριθμοι / Algorithms
+
+1. **LinearRegression**: Baseline models
+2. **Ridge**: L2 regularization (πολυωνυμικά / polynomial)
+3. **Lasso**: L1 regularization (πολυωνυμικά / polynomial)
+4. **PCA**: Unsupervised dimensionality reduction
+5. **CFS**: Filter-based feature selection
+6. **SequentialFeatureSelector**: Wrapper-based selection
+
+---
+
+## ΔΗΛΩΣΗ ΔΙΓΛΩΣΣΙΑΣ ΥΠΟΣΤΗΡΙΞΗΣ / BILINGUAL SUPPORT DECLARATION
+
+### Ελληνική Υποστήριξη / Greek Language Support
+
+Αυτό το έργο περιλαμβάνει πλήρη δίγλωσση υποστήριξη (Ελληνικά-Αγγλικά) σε όλα τα αρχεία:
+
+This project includes full bilingual support (Greek-English) across all files:
+
+✅ **Python Scripts**: Όλα τα modules περιέχουν docstrings στα Ελληνικά και Αγγλικά  
+✅ **Python Scripts**: All modules contain docstrings in both Greek and English
+
+✅ **Reports**: Όλες οι αναφορές δημιουργούνται σε δίγλωσση μορφή  
+✅ **Reports**: All reports generated in bilingual format
+
+✅ **Documentation**: README και τεχνικά έγγραφα σε αμφότερες τις γλώσσες  
+✅ **Documentation**: README and technical documents in both languages
+
+✅ **Terminology**: Γλωσσάριο ML όρων διαθέσιμο στο `ML_TERMINOLOGY_GLOSSARY_EL_EN.md`  
+✅ **Terminology**: ML terminology glossary available in `ML_TERMINOLOGY_GLOSSARY_EL_EN.md`
+
+---
+
+## ΑΝΑΠΑΡΑΓΩΓΗ ΑΠΟΤΕΛΕΣΜΑΤΩΝ / REPRODUCIBILITY
+
+Για αναπαραγωγή αποτελεσμάτων / To reproduce results:
+
+1. Βεβαιωθείτε ότι έχετε Python 3.8+ / Ensure you have Python 3.8+
+2. Εγκαταστήστε dependencies / Install dependencies
+3. Ρυθμίστε Alpha Vantage API key στο `.env` / Configure Alpha Vantage API key in `.env`
+4. Εκτελέστε όλα τα scripts με τη σειρά / Run all scripts in sequence
+5. Ελέγξτε `results/` για αναφορές / Check `results/` for reports
+
+**Σημείωση / Note**: Τα αποτελέσματα μπορεί να διαφέρουν ελαφρώς λόγω ενημερώσεων δεδομένων.  
+Results may vary slightly due to data updates.
+
+---
+
+## ΣΥΓΓΡΑΦΕΑΣ & ΠΛΗΡΟΦΟΡΙΕΣ / AUTHOR & INFORMATION
+
+**Μάθημα / Course**: Στατιστικές Μέθοδοι Μηχανικής Μάθησης / Statistical Methods of Machine Learning  
+**Εργασία / Assignment**: Task 1 - Stock Price Prediction  
+**Σύμβολο Μετοχής / Stock Symbol**: NFLX (Netflix, Inc.)  
+**Χρονική Περίοδος / Time Period**: Μάιος 2002 - Νοέμβριος 2025 / May 2002 - November 2025  
+**Συνολικά Μοντέλα / Total Models**: 96
+
+---
+
+## ΑΝΑΦΟΡΕΣ & ΠΗΓΕΣ / REFERENCES & SOURCES
+
+1. **Alpha Vantage API**: https://www.alphavantage.co/
+2. **Scikit-learn Documentation**: https://scikit-learn.org/
+3. **Gaussian Filtering**: SciPy ndimage module
+4. **ML Terminology Glossary**: `ML_TERMINOLOGY_GLOSSARY_EL_EN.md`
+
+---
+
+## ΑΔΕΙΑ / LICENSE
+
+Αυτό το έργο δημιουργήθηκε για εκπαιδευτικούς σκοπούς.  
+This project was created for educational purposes.
+
+---
+
+**Ημερομηνία Τελευταίας Ενημέρωσης / Last Updated**: Νοέμβριος 2025 / November 2025

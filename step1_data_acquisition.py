@@ -1,16 +1,28 @@
 """
+ΒΗΜΑ 1: ΣΥΛΛΟΓΗ ΔΕΔΟΜΕΝΩΝ ΚΑΙ ΠΡΟΕΠΕΞΕΡΓΑΣΙΑ ΓΙΑ ΠΡΟΒΛΕΨΗ ΤΙΜΩΝ ΜΕΤΟΧΩΝ NFLX
+=============================================================================
+
 STEP 1: DATA ACQUISITION AND PREPROCESSING FOR NFLX STOCK PRICE PREDICTION
-============================================================================
+===========================================================================
 
+Αυτό το script εκτελεί τις ακόλουθες λειτουργίες:
 This script performs the following operations:
-1. Fetches historical daily stock data from Alpha Vantage API for NFLX (Netflix)
-2. Converts daily data to monthly averages (close price and volume)
-3. Applies Gaussian smoothing with different sigma values to reduce noise
-4. Saves the processed data to CSV files for further analysis
 
-Author: Statistical Methods of Machine Learning - Task 1
-Stock Symbol: NFLX (Netflix, Inc.)
-Sector: Communication Services
+1. Ανακτά ιστορικά ημερήσια δεδομένα μετοχών από Alpha Vantage API για NFLX (Netflix)
+   Fetches historical daily stock data from Alpha Vantage API for NFLX (Netflix)
+
+2. Μετατρέπει ημερήσια δεδομένα σε μηνιαίους μέσους όρους (τιμή κλεισίματος και όγκος)
+   Converts daily data to monthly averages (close price and volume)
+
+3. Εφαρμόζει Gaussian smoothing με διαφορετικές τιμές sigma για μείωση θορύβου
+   Applies Gaussian smoothing with different sigma values to reduce noise
+
+4. Αποθηκεύει τα επεξεργασμένα δεδομένα σε αρχεία CSV για περαιτέρω ανάλυση
+   Saves the processed data to CSV files for further analysis
+
+Συγγραφέας (Author): Statistical Methods of Machine Learning - Task 1
+Σύμβολο Μετοχής (Stock Symbol): NFLX (Netflix, Inc.)
+Τομέας (Sector): Communication Services
 """
 
 import json
@@ -27,10 +39,11 @@ from scipy.ndimage import gaussian_filter1d
 # Load API key from .env file
 def load_api_key():
     """
+    Φορτώνει το Alpha Vantage API key από το αρχείο .env.
     Loads the Alpha Vantage API key from the .env file.
 
     Returns:
-        str: API key for Alpha Vantage service
+        str: API key για την υπηρεσία Alpha Vantage (API key for Alpha Vantage service)
     """
     with open(".env", "r") as f:
         for line in f:
@@ -41,21 +54,28 @@ def load_api_key():
 
 def fetch_stock_data(symbol, api_key):
     """
+    Ανακτά ημερήσια ιστορικά δεδομένα μετοχών από Alpha Vantage API.
     Fetches daily historical stock data from Alpha Vantage API.
 
     Args:
-        symbol (str): Stock ticker symbol (e.g., 'NFLX')
+        symbol (str): Σύμβολο μετοχής (Stock ticker symbol) (e.g., 'NFLX')
         api_key (str): Alpha Vantage API key
 
     Returns:
-        dict: JSON response containing time series data
+        dict: JSON απόκριση που περιέχει χρονοσειρές δεδομένων
+              JSON response containing time series data
 
-    Notes:
-        - Uses TIME_SERIES_DAILY function to get daily OHLCV data
-        - outputsize=full retrieves 20+ years of historical data
-        - Free tier has rate limits (5 API calls per minute, 500 per day)
+    Σημειώσεις / Notes:
+        - Χρησιμοποιεί TIME_SERIES_DAILY για ημερήσια δεδομένα OHLCV
+          Uses TIME_SERIES_DAILY function to get daily OHLCV data
+        - outputsize=full ανακτά 20+ χρόνια ιστορικών δεδομένων
+          outputsize=full retrieves 20+ years of historical data
+        - Δωρεάν tier έχει όρια (5 κλήσεις/λεπτό, 500/ημέρα)
+          Free tier has rate limits (5 API calls per minute, 500 per day)
     """
-    print(f"Fetching historical data for {symbol}...")
+    print(
+        f"Ανακτώνται ιστορικά δεδομένα για (Fetching historical data for) {symbol}..."
+    )
     url = f"https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol={symbol}&outputsize=full&apikey={api_key}"
 
     try:
@@ -78,19 +98,26 @@ def fetch_stock_data(symbol, api_key):
 
 def convert_to_daily_dataframe(json_data):
     """
+    Μετατρέπει την JSON απόκριση του Alpha Vantage σε pandas DataFrame με ημερήσια δεδομένα.
     Converts Alpha Vantage JSON response to a pandas DataFrame with daily data.
 
-    Args:
-        json_data (dict): JSON response from Alpha Vantage API
+    Παράμετροι (Args):
+        json_data (dict): JSON απόκριση από το Alpha Vantage API
+                          (JSON response from Alpha Vantage API)
 
-    Returns:
-        pd.DataFrame: DataFrame with columns [Date, Open, High, Low, Close, Volume]
-                      sorted chronologically (oldest to newest)
+    Επιστρέφει (Returns):
+        pd.DataFrame: DataFrame με στήλες [Date, Open, High, Low, Close, Volume]
+                      ταξινομημένο χρονολογικά (από παλιότερο σε νεότερο)
+                      (DataFrame with columns [Date, Open, High, Low, Close, Volume]
+                      sorted chronologically (oldest to newest))
 
-    Notes:
-        - Converts string values to appropriate numeric types
-        - Handles date parsing automatically
-        - Sorts data chronologically for time series analysis
+    Σημειώσεις (Notes):
+        - Μετατρέπει string τιμές στους κατάλληλους αριθμητικούς τύπους
+          (Converts string values to appropriate numeric types)
+        - Διαχειρίζεται αυτόματα την ανάλυση ημερομηνιών
+          (Handles date parsing automatically)
+        - Ταξινομεί δεδομένα χρονολογικά για ανάλυση χρονοσειρών
+          (Sorts data chronologically for time series analysis)
     """
     time_series = json_data.get("Time Series (Daily)", {})
 
@@ -129,7 +156,7 @@ def convert_to_daily_dataframe(json_data):
     df = df.sort_values("Date").reset_index(drop=True)
 
     print(
-        f"Converted to DataFrame: {len(df)} daily records from {df['Date'].min().date()} to {df['Date'].max().date()}"
+        f"Μετατράπηκε σε DataFrame (Converted to DataFrame): {len(df)} ημερήσιες εγγραφές (daily records) από (from) {df['Date'].min().date()} έως (to) {df['Date'].max().date()}"
     )
 
     return df
@@ -137,19 +164,26 @@ def convert_to_daily_dataframe(json_data):
 
 def convert_to_monthly_averages(daily_df):
     """
+    Μετατρέπει ημερήσια δεδομένα μετοχών σε μηνιαίους μέσους όρους.
     Converts daily stock data to monthly averages.
 
-    Args:
-        daily_df (pd.DataFrame): DataFrame with daily stock data
+    Παράμετροι (Args):
+        daily_df (pd.DataFrame): DataFrame με ημερήσια δεδομένα μετοχών
+                                  (DataFrame with daily stock data)
 
-    Returns:
-        pd.DataFrame: DataFrame with monthly averages [Year, Month, Close, Volume]
+    Επιστρέφει (Returns):
+        pd.DataFrame: DataFrame με μηνιαίους μέσους όρους [Year, Month, Close, Volume]
+                      (DataFrame with monthly averages [Year, Month, Close, Volume])
 
-    Notes:
-        - Groups data by year and month
-        - Calculates mean of close prices and volumes for each month
-        - This reduces noise and creates appropriate time scale for prediction
-        - Each month becomes one data point for the regression model
+    Σημειώσεις (Notes):
+        - Ομαδοποιεί δεδομένα ανά έτος και μήνα
+          (Groups data by year and month)
+        - Υπολογίζει μέσο όρο τιμών κλεισίματος και όγκων για κάθε μήνα
+          (Calculates mean of close prices and volumes for each month)
+        - Αυτό μειώνει τον θόρυβο και δημιουργεί κατάλληλη χρονική κλίμακα για πρόβλεψη
+          (This reduces noise and creates appropriate time scale for prediction)
+        - Κάθε μήνας γίνεται ένα σημείο δεδομένων για το μοντέλο παλινδρόμησης
+          (Each month becomes one data point for the regression model)
     """
     # Extract year and month
     daily_df["Year"] = daily_df["Date"].dt.year
@@ -166,7 +200,7 @@ def convert_to_monthly_averages(daily_df):
     monthly_df["Date"] = pd.to_datetime(monthly_df[["Year", "Month"]].assign(Day=1))
 
     print(
-        f"Converted to monthly averages: {len(monthly_df)} months from {monthly_df['Year'].min()}-{monthly_df['Month'].min()} to {monthly_df['Year'].max()}-{monthly_df['Month'].max()}"
+        f"Μετατράπηκε σε μηνιαίους μέσους όρους (Converted to monthly averages): {len(monthly_df)} μήνες (months) από (from) {monthly_df['Year'].min()}-{monthly_df['Month'].min()} έως (to) {monthly_df['Year'].max()}-{monthly_df['Month'].max()}"
     )
 
     return monthly_df
@@ -174,48 +208,69 @@ def convert_to_monthly_averages(daily_df):
 
 def apply_gaussian_smoothing(data, sigma):
     """
+    Εφαρμόζει Gaussian φίλτρο για εξομάλυνση δεδομένων χρονοσειράς και μείωση θορύβου.
     Applies Gaussian filter to smooth time series data and reduce noise.
 
-    Args:
-        data (np.array or pd.Series): Time series data to smooth
-        sigma (float): Standard deviation of the Gaussian kernel
-                      Higher sigma = more smoothing
+    Παράμετροι (Args):
+        data (np.array or pd.Series): Δεδομένα χρονοσειράς προς εξομάλυνση
+                                       (Time series data to smooth)
+        sigma (float): Τυπική απόκλιση του Gaussian kernel
+                       (Standard deviation of the Gaussian kernel)
+                       Μεγαλύτερο sigma = περισσότερη εξομάλυνση
+                       (Higher sigma = more smoothing)
 
-    Returns:
-        np.array: Smoothed data
+    Επιστρέφει (Returns):
+        np.array: Εξομαλυμένα δεδομένα (Smoothed data)
 
-    Notes:
-        - Gaussian filter is a weighted moving average with Gaussian weights
-        - Helps reduce high-frequency noise while preserving overall trends
-        - sigma=1: light smoothing, sigma=2: moderate, sigma=3: heavy
-        - Too much smoothing can remove important patterns
+    Σημειώσεις (Notes):
+        - Το Gaussian φίλτρο είναι ένας σταθμισμένος κινητός μέσος με Gaussian βάρη
+          (Gaussian filter is a weighted moving average with Gaussian weights)
+        - Βοηθά στη μείωση θορύβου υψηλής συχνότητας διατηρώντας τις γενικές τάσεις
+          (Helps reduce high-frequency noise while preserving overall trends)
+        - sigma=1: ελαφριά εξομάλυνση (light smoothing)
+        - sigma=2: μέτρια (moderate)
+        - sigma=3: έντονη (heavy)
+        - Πολλή εξομάλυνση μπορεί να αφαιρέσει σημαντικά μοτίβα
+          (Too much smoothing can remove important patterns)
 
-    Mathematical Background:
-        The Gaussian kernel has weights: w(x) = exp(-x²/(2σ²)) / √(2πσ²)
-        Each point is replaced by a weighted average of nearby points
+    Μαθηματικό Υπόβαθρο (Mathematical Background):
+        Το Gaussian kernel έχει βάρη (The Gaussian kernel has weights):
+        w(x) = exp(-x²/(2σ²)) / √(2πσ²)
+        Κάθε σημείο αντικαθίσταται από σταθμισμένο μέσο όρο γειτονικών σημείων
+        (Each point is replaced by a weighted average of nearby points)
     """
     return gaussian_filter1d(data, sigma=sigma)
 
 
 def save_data_versions(monthly_df, output_dir="data"):
     """
+    Αποθηκεύει πολλαπλές εκδόσεις των δεδομένων με διαφορετικές επιλογές προεπεξεργασίας.
     Saves multiple versions of the data with different preprocessing options.
 
-    Args:
-        monthly_df (pd.DataFrame): Monthly averaged data
-        output_dir (str): Directory to save CSV files
+    Παράμετροι (Args):
+        monthly_df (pd.DataFrame): Μηνιαία δεδομένα μέσων όρων
+                                    (Monthly averaged data)
+        output_dir (str): Κατάλογος αποθήκευσης αρχείων CSV
+                          (Directory to save CSV files)
 
-    Returns:
-        dict: Dictionary with paths to saved files
+    Επιστρέφει (Returns):
+        dict: Λεξικό με διαδρομές αποθηκευμένων αρχείων
+              (Dictionary with paths to saved files)
 
-    Notes:
+    Σημειώσεις / Notes:
+        Αποθηκεύει 4 εκδόσεις για σύγκριση:
         Saves 4 versions to allow comparison:
-        1. Raw monthly data (no smoothing)
-        2. Smoothed with sigma=1 (light smoothing)
-        3. Smoothed with sigma=2 (moderate smoothing)
-        4. Smoothed with sigma=3 (heavy smoothing)
+        1. Ακατέργαστα μηνιαία δεδομένα (χωρίς εξομάλυνση)
+           Raw monthly data (no smoothing)
+        2. Εξομαλυμένα με sigma=1 (ελαφριά εξομάλυνση)
+           Smoothed with sigma=1 (light smoothing)
+        3. Εξομαλυμένα με sigma=2 (μέτρια εξομάλυνση)
+           Smoothed with sigma=2 (moderate smoothing)
+        4. Εξομαλυμένα με sigma=3 (έντονη εξομάλυνση)
+           Smoothed with sigma=3 (heavy smoothing)
 
-    This allows testing which preprocessing yields best model performance.
+        Αυτό επιτρέπει τη δοκιμή ποιας προεπεξεργασίας δίνει την καλύτερη απόδοση μοντέλου.
+        This allows testing which preprocessing yields best model performance.
     """
     # Create output directory if it doesn't exist
     os.makedirs(output_dir, exist_ok=True)
@@ -226,7 +281,9 @@ def save_data_versions(monthly_df, output_dir="data"):
     raw_path = os.path.join(output_dir, "nflx_monthly_raw.csv")
     monthly_df.to_csv(raw_path, index=False)
     saved_files["raw"] = raw_path
-    print(f"Saved raw monthly data to: {raw_path}")
+    print(
+        f"Αποθηκεύτηκαν ακατέργαστα μηνιαία δεδομένα (Saved raw monthly data) σε (to): {raw_path}"
+    )
 
     # Save versions with different Gaussian smoothing
     for sigma in [1, 2, 3]:
@@ -247,24 +304,33 @@ def save_data_versions(monthly_df, output_dir="data"):
         )
         smoothed_df.to_csv(smoothed_path, index=False)
         saved_files[f"sigma_{sigma}"] = smoothed_path
-        print(f"Saved smoothed data (sigma={sigma}) to: {smoothed_path}")
+        print(
+            f"Αποθηκεύτηκαν εξομαλυμένα δεδομένα (Saved smoothed data) (sigma={sigma}) σε (to): {smoothed_path}"
+        )
 
     return saved_files
 
 
 def visualize_smoothing_comparison(monthly_df, output_dir="data"):
     """
+    Δημιουργεί οπτικοποίηση που συγκρίνει ακατέργαστα δεδομένα με διαφορετικά επίπεδα εξομάλυνσης.
     Creates visualization comparing raw data with different smoothing levels.
 
-    Args:
-        monthly_df (pd.DataFrame): Monthly averaged data
-        output_dir (str): Directory to save plot
+    Παράμετροι (Args):
+        monthly_df (pd.DataFrame): Μηνιαία δεδομένα μέσων όρων
+                                    (Monthly averaged data)
+        output_dir (str): Κατάλογος αποθήκευσης γραφήματος
+                          (Directory to save plot)
 
-    Notes:
-        - Shows how different sigma values affect the data
-        - Helps in selecting appropriate smoothing level
-        - Too little smoothing: noisy data, harder to learn patterns
-        - Too much smoothing: loss of important variations
+    Σημειώσεις (Notes):
+        - Δείχνει πώς οι διαφορετικές τιμές sigma επηρεάζουν τα δεδομένα
+          (Shows how different sigma values affect the data)
+        - Βοηθά στην επιλογή κατάλληλου επιπέδου εξομάλυνσης
+          (Helps in selecting appropriate smoothing level)
+        - Πολύ λίγη εξομάλυνση: θορυβώδη δεδομένα, δυσκολότερη εκμάθηση μοτίβων
+          (Too little smoothing: noisy data, harder to learn patterns)
+        - Πολύ εξομάλυνση: απώλεια σημαντικών διακυμάνσεων
+          (Too much smoothing: loss of important variations)
     """
     fig, axes = plt.subplots(2, 1, figsize=(14, 10))
 
@@ -327,24 +393,35 @@ def visualize_smoothing_comparison(monthly_df, output_dir="data"):
     # Save plot
     plot_path = os.path.join(output_dir, "smoothing_comparison.png")
     plt.savefig(plot_path, dpi=150, bbox_inches="tight")
-    print(f"Saved smoothing comparison plot to: {plot_path}")
+    print(
+        f"Αποθηκεύτηκε γράφημα σύγκρισης εξομάλυνσης (Saved smoothing comparison plot) σε (to): {plot_path}"
+    )
     plt.close()
 
 
 def main():
     """
+    Κύρια συνάρτηση εκτέλεσης που ενορχηστρώνει ολόκληρη τη διαδικασία απόκτησης δεδομένων.
     Main execution function that orchestrates the entire data acquisition pipeline.
 
-    Pipeline Steps:
-    1. Load API key from .env file
-    2. Fetch daily NFLX data from Alpha Vantage
-    3. Convert to pandas DataFrame
-    4. Aggregate to monthly averages
-    5. Apply Gaussian smoothing with multiple sigma values
-    6. Save all versions to CSV files
-    7. Create visualization comparing smoothing levels
+    Βήματα Διαδικασίας (Pipeline Steps):
+    1. Φόρτωση API key από αρχείο .env
+       (Load API key from .env file)
+    2. Ανάκτηση ημερήσιων δεδομένων NFLX από Alpha Vantage
+       (Fetch daily NFLX data from Alpha Vantage)
+    3. Μετατροπή σε pandas DataFrame
+       (Convert to pandas DataFrame)
+    4. Συγκέντρωση σε μηνιαίους μέσους όρους
+       (Aggregate to monthly averages)
+    5. Εφαρμογή Gaussian εξομάλυνσης με πολλαπλές τιμές sigma
+       (Apply Gaussian smoothing with multiple sigma values)
+    6. Αποθήκευση όλων των εκδόσεων σε αρχεία CSV
+       (Save all versions to CSV files)
+    7. Δημιουργία οπτικοποίησης σύγκρισης επιπέδων εξομάλυνσης
+       (Create visualization comparing smoothing levels)
     """
     print("=" * 80)
+    print("ΠΡΟΒΛΕΨΗ ΤΙΜΗΣ ΜΕΤΟΧΗΣ NFLX - ΑΠΟΚΤΗΣΗ ΔΕΔΟΜΕΝΩΝ")
     print("NFLX STOCK PRICE PREDICTION - DATA ACQUISITION")
     print("=" * 80)
     print()
@@ -354,65 +431,68 @@ def main():
     OUTPUT_DIR = "data"
 
     try:
-        # Step 1: Load API key
+        # Βήμα 1: Φόρτωση API key (Step 1: Load API key)
         api_key = load_api_key()
-        print(f"✓ Loaded API key from .env file")
+        print(f"✓ Φορτώθηκε API key από αρχείο .env (Loaded API key from .env file)")
         print()
 
-        # Step 2: Fetch data from API
+        # Βήμα 2: Ανάκτηση δεδομένων από API (Step 2: Fetch data from API)
         json_data = fetch_stock_data(SYMBOL, api_key)
         print()
 
-        # Step 3: Convert to daily DataFrame
+        # Βήμα 3: Μετατροπή σε ημερήσιο DataFrame (Step 3: Convert to daily DataFrame)
         daily_df = convert_to_daily_dataframe(json_data)
         print()
 
-        # Step 4: Convert to monthly averages
+        # Βήμα 4: Μετατροπή σε μηνιαίους μέσους όρους (Step 4: Convert to monthly averages)
         monthly_df = convert_to_monthly_averages(daily_df)
         print()
 
-        # Step 5: Save different versions
-        print("Saving data files...")
+        # Βήμα 5: Αποθήκευση διαφορετικών εκδόσεων (Step 5: Save different versions)
+        print("Αποθήκευση αρχείων δεδομένων... (Saving data files...)")
         saved_files = save_data_versions(monthly_df, OUTPUT_DIR)
         print()
 
-        # Step 6: Create visualization
-        print("Creating visualization...")
+        # Βήμα 6: Δημιουργία οπτικοποίησης (Step 6: Create visualization)
+        print("Δημιουργία οπτικοποίησης... (Creating visualization...)")
         visualize_smoothing_comparison(monthly_df, OUTPUT_DIR)
         print()
 
-        # Display summary statistics
+        # Εμφάνιση συνοπτικών στατιστικών (Display summary statistics)
         print("=" * 80)
-        print("DATA SUMMARY")
+        print("ΣΥΝΟΨΗ ΔΕΔΟΜΕΝΩΝ (DATA SUMMARY)")
         print("=" * 80)
-        print(f"Stock Symbol: {SYMBOL}")
-        print(f"Total Months: {len(monthly_df)}")
+        print(f"Σύμβολο Μετοχής (Stock Symbol): {SYMBOL}")
+        print(f"Σύνολο Μηνών (Total Months): {len(monthly_df)}")
         print(
-            f"Date Range: {monthly_df['Date'].min().date()} to {monthly_df['Date'].max().date()}"
+            f"Εύρος Ημερομηνιών (Date Range): {monthly_df['Date'].min().date()} έως (to) {monthly_df['Date'].max().date()}"
         )
-        print(f"\nClose Price Statistics:")
-        print(f"  Mean: ${monthly_df['Close'].mean():.2f}")
-        print(f"  Std Dev: ${monthly_df['Close'].std():.2f}")
-        print(f"  Min: ${monthly_df['Close'].min():.2f}")
-        print(f"  Max: ${monthly_df['Close'].max():.2f}")
-        print(f"\nVolume Statistics:")
-        print(f"  Mean: {monthly_df['Volume'].mean():.0f}")
-        print(f"  Std Dev: {monthly_df['Volume'].std():.0f}")
-        print(f"  Min: {monthly_df['Volume'].min():.0f}")
-        print(f"  Max: {monthly_df['Volume'].max():.0f}")
+        print(f"\nΣτατιστικά Τιμής Κλεισίματος (Close Price Statistics):")
+        print(f"  Μέσος Όρος (Mean): ${monthly_df['Close'].mean():.2f}")
+        print(f"  Τυπική Απόκλιση (Std Dev): ${monthly_df['Close'].std():.2f}")
+        print(f"  Ελάχιστο (Min): ${monthly_df['Close'].min():.2f}")
+        print(f"  Μέγιστο (Max): ${monthly_df['Close'].max():.2f}")
+        print(f"\nΣτατιστικά Όγκου (Volume Statistics):")
+        print(f"  Μέσος Όρος (Mean): {monthly_df['Volume'].mean():.0f}")
+        print(f"  Τυπική Απόκλιση (Std Dev): {monthly_df['Volume'].std():.0f}")
+        print(f"  Ελάχιστο (Min): {monthly_df['Volume'].min():.0f}")
+        print(f"  Μέγιστο (Max): {monthly_df['Volume'].max():.0f}")
         print()
 
         print("=" * 80)
+        print("✓ Η ΑΠΟΚΤΗΣΗ ΔΕΔΟΜΕΝΩΝ ΟΛΟΚΛΗΡΩΘΗΚΕ ΕΠΙΤΥΧΩΣ")
         print("✓ DATA ACQUISITION COMPLETED SUCCESSFULLY")
         print("=" * 80)
-        print("\nSaved Files:")
+        print("\nΑποθηκευμένα Αρχεία (Saved Files):")
         for key, path in saved_files.items():
             print(f"  - {key}: {path}")
         print()
-        print("Next Step: Run step2_feature_engineering.py to create lagged features")
+        print(
+            "Επόμενο Βήμα (Next Step): Εκτέλεση (Run) step2_feature_engineering.py για δημιουργία χαρακτηριστικών υστέρησης (to create lagged features)"
+        )
 
     except Exception as e:
-        print(f"\n❌ ERROR: {e}")
+        print(f"\n❌ ΣΦΑΛΜΑ (ERROR): {e}")
         raise
 
 

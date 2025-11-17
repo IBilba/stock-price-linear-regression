@@ -1,24 +1,30 @@
 """
+ΒΗΜΑ 3: BASELINE ΓΡΑΜΜΙΚΗ ΠΑΛΙΝΔΡΟΜΗΣΗ (ΕΡΓΑΣΙΑ Α)
 STEP 3: BASELINE LINEAR REGRESSION MODELS (TASK A)
-====================================================
+==================================================
 
-This script trains simple linear regression models on all feature configurations:
-1. Loads all 16 feature sets (4 smoothing levels × 4 lag configurations)
-2. Trains LinearRegression model for each configuration
-3. Computes metrics: RMSE, MAE, R² for training and validation sets
-4. Identifies best configuration based on validation performance
-5. Displays model coefficients and feature importance
-6. Creates comprehensive visualizations
+Αυτό το script εκπαιδεύει απλά μοντέλα γραμμικής παλινδρόμησης:
+This script trains simple linear regression models:
 
-This addresses TASK A of the assignment:
+1. Φορτώνει όλα τα 16 σύνολα χαρακτηριστικών (4 εξομάλυνση × 4 υστερήσεις)
+   Loads all 16 feature sets (4 smoothing levels × 4 lag configurations)
+
+2. Εκπαιδεύει LinearRegression μοντέλο για κάθε ρύθμιση
+   Trains LinearRegression model for each configuration
+
+3. Υπολογίζει μετρικές: RMSE, MAE, R² για training και validation sets
+   Computes metrics: RMSE, MAE, R² for training and validation sets
+
+4. Εντοπίζει την καλύτερη ρύθμιση βάσει της απόδοσης επικύρωσης
+   Identifies best configuration based on validation performance
+
+Αυτό απαντά στην ΕΡΓΑΣΙΑ Α / This addresses TASK A:
+"Χρησιμοποιήστε ένα μοντέλο γραμμικής παλινδρόμησης για να βρείτε τη σχέση
+μεταξύ παρελθοντικών τιμών κλεισίματος και της επόμενης τιμής."
 "Use a linear regression model to find the relationship between past
-closing values (delay characteristics) and the target (next closing price).
-Choose how far in time you want to go -- do more testing. Be careful not
-to raise the number of parameters too much. Indicate the parameters of the
-model you calculated. Report the appropriate error metrics for the training
-set and validation set."
+closing values and the target (next closing price)."
 
-Author: Statistical Methods of Machine Learning - Task 1
+Συγγραφέας / Author: Statistical Methods of Machine Learning - Task 1
 """
 
 import glob
@@ -34,17 +40,22 @@ from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 
 def load_feature_set(features_path):
     """
+    Φορτώνει ένα αποθηκευμένο σύνολο χαρακτηριστικών από τον δίσκο.
     Loads a saved feature set from disk.
 
-    Args:
-        features_path (str): Path to .npz file containing features
+    Παράμετροι / Args:
+        features_path (str): Διαδρομή προς αρχείο .npz που περιέχει χαρακτηριστικά
+                              Path to .npz file containing features
 
-    Returns:
-        dict: Dictionary with X_train, X_val, y_train, y_val, feature_names
+    Επιστρέφει / Returns:
+        dict: Λεξικό με X_train, X_val, y_train, y_val, feature_names
+              Dictionary with X_train, X_val, y_train, y_val, feature_names
 
-    Notes:
-        - Features are already scaled (StandardScaler was applied)
-        - Train/validation split is chronological (pre-2025 vs 2025)
+    Σημειώσεις / Notes:
+        - Τα χαρακτηριστικά είναι ήδη κλιμακωμένα (StandardScaler εφαρμόστηκε)
+          Features are already scaled (StandardScaler was applied)
+        - Η διαίρεση εκπαίδευσης/επικύρωσης είναι χρονολογική (προ-2025 vs 2025)
+          Train/validation split is chronological (pre-2025 vs 2025)
     """
     data = np.load(features_path, allow_pickle=True)
     return {
@@ -58,45 +69,50 @@ def load_feature_set(features_path):
 
 def compute_metrics(y_true, y_pred):
     """
+    Υπολογίζει μετρικές παλινδρόμησης.
     Computes regression metrics.
 
-    Args:
-        y_true (np.array): True target values
-        y_pred (np.array): Predicted target values
+    Παράμετροι / Args:
+        y_true (np.array): Πραγματικές τιμές στόχων / True target values
+        y_pred (np.array): Προβλεπόμενες τιμές στόχων / Predicted target values
 
-    Returns:
-        dict: Dictionary with RMSE, MAE, R² metrics
+    Επιστρέφει / Returns:
+        dict: Λεξικό με μετρικές RMSE, MAE, R² / Dictionary with RMSE, MAE, R² metrics
 
-    Metric Explanations:
+    Επεξηγήσεις Μετρικών / Metric Explanations:
 
-    1. RMSE (Root Mean Squared Error):
-       - Square root of average squared differences
-       - Formula: √(Σ(y_true - y_pred)² / n)
-       - Units: Same as target (dollars)
-       - Penalizes large errors more than small ones
-       - Lower is better
+    1. RMSE (Ρίζα Μέσου Τετραγωνικού Σφάλματος / Root Mean Squared Error):
+       - Τετραγωνική ρίζα μέσου τετραγωνικών διαφορών / Square root of average squared differences
+       - Τύπος / Formula: √(Σ(y_true - y_pred)² / n)
+       - Μονάδες / Units: Όπως ο στόχος (δολάρια) / Same as target (dollars)
+       - Τιμωρεί μεγάλα σφάλματα περισσότερο από μικρά / Penalizes large errors more than small ones
+       - Χαμηλότερο είναι καλύτερο / Lower is better
 
-    2. MAE (Mean Absolute Error):
-       - Average absolute differences
-       - Formula: Σ|y_true - y_pred| / n
-       - Units: Same as target (dollars)
-       - More robust to outliers than RMSE
-       - Easier to interpret: "on average, predictions are off by $X"
-       - Lower is better
+    2. MAE (Μέσο Απόλυτο Σφάλμα / Mean Absolute Error):
+       - Μέσος όρος απόλυτων διαφορών / Average absolute differences
+       - Τύπος / Formula: Σ|y_true - y_pred| / n
+       - Μονάδες / Units: Όπως ο στόχος (δολάρια) / Same as target (dollars)
+       - Πιο ανθεκτικό σε outliers από RMSE / More robust to outliers than RMSE
+       - Ευκολότερο να ερμηνευτεί: "κατά μέσο όρο, οι προβλέψεις απέχουν $X"
+         Easier to interpret: "on average, predictions are off by $X"
+       - Χαμηλότερο είναι καλύτερο / Lower is better
 
-    3. R² (Coefficient of Determination):
-       - Proportion of variance explained by the model
-       - Formula: 1 - (SS_res / SS_tot)
-       - Range: (-∞, 1], typically [0, 1]
-       - R² = 1: Perfect predictions
-       - R² = 0: Model no better than predicting mean
-       - R² < 0: Model worse than predicting mean
-       - Higher is better
+    3. R² (Συντελεστής Προσδιορισμού / Coefficient of Determination):
+       - Αναλογία διακύμανσης που εξηγείται από το μοντέλο
+         Proportion of variance explained by the model
+       - Τύπος / Formula: 1 - (SS_res / SS_tot)
+       - Εύρος / Range: (-∞, 1], συνήθως / typically [0, 1]
+       - R² = 1: Τέλειες προβλέψεις / Perfect predictions
+       - R² = 0: Μοντέλο όχι καλύτερο από πρόβλεψη μέσου όρου / Model no better than predicting mean
+       - R² < 0: Μοντέλο χειρότερο από πρόβλεψη μέσου όρου / Model worse than predicting mean
+       - Υψηλότερο είναι καλύτερο / Higher is better
 
-    Why All Three Metrics:
-        - RMSE shows overall prediction error with emphasis on large mistakes
-        - MAE shows typical prediction error
-        - R² shows how well model captures variance (scale-independent)
+    Γιατί Και οι Τρεις Μετρικές / Why All Three Metrics:
+        - RMSE δείχνει συνολικό σφάλμα πρόβλεψης με έμφαση σε μεγάλα λάθη
+          RMSE shows overall prediction error with emphasis on large mistakes
+        - MAE δείχνει τυπικό σφάλμα πρόβλεψης / MAE shows typical prediction error
+        - R² δείχνει πόσο καλά το μοντέλο συλλαμβάνει τη διακύμανση (ανεξάρτητο κλίμακας)
+          R² shows how well model captures variance (scale-independent)
     """
     rmse = np.sqrt(mean_squared_error(y_true, y_pred))
     mae = mean_absolute_error(y_true, y_pred)
@@ -107,35 +123,40 @@ def compute_metrics(y_true, y_pred):
 
 def train_linear_regression(X_train, y_train, X_val, y_val):
     """
+    Εκπαιδεύει ένα απλό μοντέλο γραμμικής παλινδρόμησης.
     Trains a simple linear regression model.
 
-    Args:
-        X_train: Training features (scaled)
-        y_train: Training targets
-        X_val: Validation features (scaled)
-        y_val: Validation targets
+    Παράμετροι / Args:
+        X_train: Χαρακτηριστικά εκπαίδευσης (κλιμακωμένα) / Training features (scaled)
+        y_train: Στόχοι εκπαίδευσης / Training targets
+        X_val: Χαρακτηριστικά επικύρωσης (κλιμακωμένα) / Validation features (scaled)
+        y_val: Στόχοι επικύρωσης / Validation targets
 
-    Returns:
+    Επιστρέφει / Returns:
         tuple: (model, train_metrics, val_metrics, predictions)
 
-    Linear Regression Model:
+    Μοντέλο Γραμμικής Παλινδρόμησης / Linear Regression Model:
         y = β₀ + β₁x₁ + β₂x₂ + ... + βₙxₙ
 
-        where:
-        - y: Predicted close price
-        - β₀: Intercept (bias term)
-        - β₁, β₂, ..., βₙ: Coefficients for each feature
-        - x₁, x₂, ..., xₙ: Feature values (lagged close prices and volumes)
+        όπου / where:
+        - y: Προβλεπόμενη τιμή κλεισίματος / Predicted close price
+        - β₀: Τομή (όρος πολωσης) / Intercept (bias term)
+        - β₁, β₂, ..., βₙ: Συντελεστές για κάθε χαρακτηριστικό / Coefficients for each feature
+        - x₁, x₂, ..., xₙ: Τιμές χαρακτηριστικών (τιμές κλεισίματος και όγκων με υστέρηση)
+                            Feature values (lagged close prices and volumes)
 
-    Optimization:
-        Minimizes: Σ(y_true - y_pred)²
+    Βελτιστοποίηση / Optimization:
+        Ελαχιστοποιεί / Minimizes: Σ(y_true - y_pred)²
+        Αυτό ονομάζεται Ελάχιστα Τετράγωνα (Ordinary Least Squares - OLS)
         This is called Ordinary Least Squares (OLS)
-        Has closed-form solution: β = (X'X)⁻¹X'y
+        Έχει λύση κλειστής μορφής / Has closed-form solution: β = (X'X)⁻¹X'y
 
-    No Regularization:
+    Χωρίς Κανονικοποίηση / No Regularization:
+        Η βασική γραμμική παλινδρόμηση δεν έχει όρο ποινής
         Basic linear regression has no penalty term
+        Μπορεί να κάνει overfitting αν πολλά χαρακτηριστικά σε σχέση με δείγματα
         Can overfit if too many features relative to samples
-        Coefficients can become very large
+        Οι συντελεστές μπορούν να γίνουν πολύ μεγάλοι / Coefficients can become very large
     """
     # Create and train model
     model = LinearRegression()
@@ -156,15 +177,16 @@ def train_linear_regression(X_train, y_train, X_val, y_val):
 
 def extract_config_from_filename(filename):
     """
+    Εξάγει τύπο εξομάλυνσης και n_lags από όνομα αρχείου χαρακτηριστικών.
     Extracts smoothing type and n_lags from feature filename.
 
-    Args:
-        filename (str): e.g., "features_raw_6lags.npz"
+    Παράμετροι / Args:
+        filename (str): π.χ. / e.g., "features_raw_6lags.npz"
 
-    Returns:
+    Επιστρέφει / Returns:
         tuple: (smoothing_type, n_lags)
 
-    Examples:
+    Παραδείγματα / Examples:
         "features_raw_3lags.npz" → ("raw", 3)
         "features_sigma1_6lags.npz" → ("sigma1", 6)
     """
@@ -186,17 +208,21 @@ def extract_config_from_filename(filename):
 
 def train_all_configurations(features_dir="features"):
     """
+    Εκπαιδεύει μοντέλα γραμμικής παλινδρόμησης σε όλα τα διαθέσιμα σύνολα χαρακτηριστικών.
     Trains linear regression models on all available feature sets.
 
-    Args:
-        features_dir (str): Directory containing feature files
+    Παράμετροι / Args:
+        features_dir (str): Κατάλογος που περιέχει αρχεία χαρακτηριστικών
+                             Directory containing feature files
 
-    Returns:
-        pd.DataFrame: Results for all configurations
+    Επιστρέφει / Returns:
+        pd.DataFrame: Αποτελέσματα για όλες τις ρυθμίσεις / Results for all configurations
 
-    Strategy:
-        - Test all combinations of preprocessing and lag windows
-        - Track performance on both training and validation sets
+    Στρατηγική / Strategy:
+        - Δοκιμή όλων των συνδυασμών προεπεξεργασίας και παραθύρων υστέρησης
+          Test all combinations of preprocessing and lag windows
+        - Παρακολούθηση απόδοσης σε εκπαίδευση και επικύρωση
+          Track performance on both training and validation sets
         - Identify overfitting: large gap between train and validation error
         - Select best model based on validation performance (not training)
     """
@@ -206,7 +232,9 @@ def train_all_configurations(features_dir="features"):
     if len(feature_files) == 0:
         raise FileNotFoundError(f"No feature files found in {features_dir}/")
 
-    print(f"Found {len(feature_files)} feature configurations")
+    print(
+        f"Βρέθηκαν / Found {len(feature_files)} ρυθμίσεις χαρακτηριστικών / feature configurations"
+    )
     print()
 
     results = []
@@ -218,7 +246,9 @@ def train_all_configurations(features_dir="features"):
         if smoothing_type is None:
             continue
 
-        print(f"Training: smoothing={smoothing_type}, n_lags={n_lags}")
+        print(
+            f"Εκπαίδευση / Training: εξομάλυνση / smoothing={smoothing_type}, n_lags={n_lags}"
+        )
 
         # Load data
         data = load_feature_set(features_path)
@@ -249,10 +279,10 @@ def train_all_configurations(features_dir="features"):
         results.append(result)
 
         print(
-            f"  Training   - RMSE: ${train_metrics['RMSE']:.2f}, MAE: ${train_metrics['MAE']:.2f}, R²: {train_metrics['R2']:.4f}"
+            f"  Εκπαίδευση / Training   - RMSE: ${train_metrics['RMSE']:.2f}, MAE: ${train_metrics['MAE']:.2f}, R²: {train_metrics['R2']:.4f}"
         )
         print(
-            f"  Validation - RMSE: ${val_metrics['RMSE']:.2f}, MAE: ${val_metrics['MAE']:.2f}, R²: {val_metrics['R2']:.4f}"
+            f"  Επικύρωση / Validation - RMSE: ${val_metrics['RMSE']:.2f}, MAE: ${val_metrics['MAE']:.2f}, R²: {val_metrics['R2']:.4f}"
         )
         print()
 
@@ -261,18 +291,20 @@ def train_all_configurations(features_dir="features"):
 
 def analyze_best_configuration(results_df):
     """
+    Εντοπίζει και αναλύει την καλύτερα ρύθμιση.
     Identifies and analyzes the best performing configuration.
 
-    Args:
-        results_df (pd.DataFrame): Results from all configurations
+    Παράμετροι / Args:
+        results_df (pd.DataFrame): Αποτελέσματα από όλες τις ρυθμίσεις / Results from all configurations
 
-    Returns:
-        dict: Best configuration information
+    Επιστρέφει / Returns:
+        dict: Πληροφορίες καλύτερης ρύθμισης / Best configuration information
 
-    Selection Criteria:
-        - Primary: Lowest validation RMSE
-        - Validation set represents future performance
-        - Training metrics can be misleadingly good (overfitting)
+    Κριτήρια Επιλογής / Selection Criteria:
+        - Κύριο / Primary: Χαμηλότερο validation RMSE / Lowest validation RMSE
+        - Το validation set αντιπροσωπεύει μελλοντική απόδοση / Validation set represents future performance
+        - Οι training μετρικές μπορεί να είναι παραπλανητικά καλές (overfitting)
+          Training metrics can be misleadingly good (overfitting)
     """
     # Sort by validation RMSE (lower is better)
     results_sorted = results_df.sort_values("val_rmse")
@@ -280,20 +312,20 @@ def analyze_best_configuration(results_df):
     best_config = results_sorted.iloc[0]
 
     print("=" * 80)
-    print("BEST CONFIGURATION")
+    print("ΚΑΛΥΤΕΡΗ ΡΥΘΜΙΣΗ / BEST CONFIGURATION")
     print("=" * 80)
-    print(f"Smoothing: {best_config['smoothing']}")
-    print(f"Number of Lags: {best_config['n_lags']}")
-    print(f"Total Features: {best_config['n_features']}")
-    print(f"Training Samples: {best_config['n_train_samples']}")
-    print(f"Validation Samples: {best_config['n_val_samples']}")
+    print(f"Εξομάλυνση / Smoothing: {best_config['smoothing']}")
+    print(f"Αριθμός Υστερήσεων / Number of Lags: {best_config['n_lags']}")
+    print(f"Σύνολο Χαρακτηριστικών / Total Features: {best_config['n_features']}")
+    print(f"Δείγματα Εκπαίδευσης / Training Samples: {best_config['n_train_samples']}")
+    print(f"Δείγματα Επικύρωσης / Validation Samples: {best_config['n_val_samples']}")
     print()
-    print("Training Metrics:")
+    print("Μετρικές Εκπαίδευσης / Training Metrics:")
     print(f"  RMSE: ${best_config['train_rmse']:.2f}")
     print(f"  MAE:  ${best_config['train_mae']:.2f}")
     print(f"  R²:   {best_config['train_r2']:.4f}")
     print()
-    print("Validation Metrics:")
+    print("Μετρικές Επικύρωσης / Validation Metrics:")
     print(f"  RMSE: ${best_config['val_rmse']:.2f}")
     print(f"  MAE:  ${best_config['val_mae']:.2f}")
     print(f"  R²:   {best_config['val_r2']:.4f}")
@@ -304,45 +336,54 @@ def analyze_best_configuration(results_df):
     mae_gap = best_config["val_mae"] - best_config["train_mae"]
     r2_gap = best_config["train_r2"] - best_config["val_r2"]
 
-    print("Overfitting Analysis:")
-    print(f"  RMSE Gap (Val - Train): ${rmse_gap:.2f}")
-    print(f"  MAE Gap (Val - Train):  ${mae_gap:.2f}")
-    print(f"  R² Gap (Train - Val):   {r2_gap:.4f}")
+    print("Ανάλυση Overfitting / Overfitting Analysis:")
+    print(f"  Διαφορά RMSE (Val - Train) / RMSE Gap (Val - Train): ${rmse_gap:.2f}")
+    print(f"  Διαφορά MAE (Val - Train) / MAE Gap (Val - Train):  ${mae_gap:.2f}")
+    print(f"  Διαφορά R² (Train - Val) / R² Gap (Train - Val):   {r2_gap:.4f}")
 
     if rmse_gap > 50:
-        print("  ⚠ Warning: Significant overfitting detected (large RMSE gap)")
+        print(
+            "  ⚠ Προειδοποίηση / Warning: Σημαντικό overfitting (μεγάλη διαφορά RMSE) / Significant overfitting detected (large RMSE gap)"
+        )
     elif rmse_gap > 20:
-        print("  ⚠ Moderate overfitting (moderate RMSE gap)")
+        print(
+            "  ⚠ Μέτριο overfitting (μέτρια διαφορά RMSE) / Moderate overfitting (moderate RMSE gap)"
+        )
     else:
-        print("  ✓ Good generalization (small RMSE gap)")
+        print(
+            "  ✓ Καλή γενίκευση (μικρή διαφορά RMSE) / Good generalization (small RMSE gap)"
+        )
 
     return best_config
 
 
 def display_model_parameters(model, feature_names):
     """
+    Εμφανίζει τις μαθημένες παραμέτρους του μοντέλου (συντελεστές).
     Displays the learned model parameters (coefficients).
 
-    Args:
-        model: Trained LinearRegression model
-        feature_names: Names of features
+    Παράμετροι / Args:
+        model: Εκπαιδευμένο LinearRegression μοντέλο / Trained LinearRegression model
+        feature_names: Ονόματα χαρακτηριστικών / Names of features
 
-    Model Equation:
-        price = intercept + Σ(coefficient_i × feature_i)
+    Εξίσωση Μοντέλου / Model Equation:
+        τιμή / price = τομή / intercept + Σ(συντελεστής_i / coefficient_i × χαρακτηριστικό_i / feature_i)
 
-    Interpretation (for scaled features):
-        - Positive coefficient: feature increase → price increase
-        - Negative coefficient: feature increase → price decrease
-        - Larger absolute value: stronger influence
-        - Features are scaled, so coefficients are directly comparable
+    Ερμηνεία (για κλιμακωμένα χαρακτηριστικά) / Interpretation (for scaled features):
+        - Θετικός συντελεστής / Positive coefficient: αύξηση χαρακτηριστικού → αύξηση τιμής / feature increase → price increase
+        - Αρνητικός συντελεστής / Negative coefficient: αύξηση χαρακτηριστικού → μείωση τιμής / feature increase → price decrease
+        - Μεγαλύτερη απόλυτη τιμή / Larger absolute value: ισχυρότερη επιρροή / stronger influence
+        - Τα χαρακτηριστικά είναι κλιμακωμένα, άρα οι συντελεστές είναι άμεσα συγκρίσιμοι
+          Features are scaled, so coefficients are directly comparable
     """
     print("=" * 80)
+    print("ΠΑΡΑΜΕΤΡΟΙ ΜΟΝΤΕΛΟΥ (ΓΡΑΜΜΙΚΗ ΠΑΛΙΝΔΡΟΜΗΣΗ)")
     print("MODEL PARAMETERS (LINEAR REGRESSION)")
     print("=" * 80)
     print()
-    print(f"Intercept (β₀): ${model.intercept_:.2f}")
+    print(f"Τομή / Intercept (β₀): ${model.intercept_:.2f}")
     print()
-    print("Feature Coefficients:")
+    print("Συντελεστές Χαρακτηριστικών / Feature Coefficients:")
     print("-" * 60)
     print(f"{'Feature':<20} {'Coefficient':>15} {'Abs Value':>15}")
     print("-" * 60)
@@ -366,30 +407,41 @@ def display_model_parameters(model, feature_names):
 
     print("-" * 60)
     print()
-    print("Interpretation:")
-    print("  - Coefficients show the change in predicted price (in $)")
+    print("Ερμηνεία / Interpretation:")
+    print("  - Οι συντελεστές δείχνουν την αλλαγή στην προβλεπόμενη τιμή (σε $)")
+    print("    Coefficients show the change in predicted price (in $)")
+    print("    για αλλαγή 1 τυπικής απόκλισης στο χαρακτηριστικό")
     print("    for a 1 standard deviation change in the feature")
-    print("  - Positive: feature increase → price increase")
-    print("  - Negative: feature increase → price decrease")
-    print("  - Larger absolute value → stronger influence")
+    print(
+        "  - Θετικό / Positive: αύξηση χαρακτηριστικού → αύξηση τιμής / feature increase → price increase"
+    )
+    print(
+        "  - Αρνητικό / Negative: αύξηση χαρακτηριστικού → μείωση τιμής / feature increase → price decrease"
+    )
+    print(
+        "  - Μεγαλύτερη απόλυτη τιμή / Larger absolute value → ισχυρότερη επιρροή / stronger influence"
+    )
     print()
 
     # Highlight most important features
-    print("Top 5 Most Influential Features:")
-    for i, row in coef_df.head(5).iterrows():
-        direction = "increases" if row["coefficient"] > 0 else "decreases"
+    print("Τοπ 5 Πιο Επιδραστικά Χαρακτηριστικά / Top 5 Most Influential Features:")
+    for rank, (_, row) in enumerate(coef_df.head(5).iterrows(), 1):
+        direction = (
+            "αυξάνει / increases" if row["coefficient"] > 0 else "μειώνει / decreases"
+        )
         print(
-            f"  {i+1}. {row['feature']}: {direction} price by ${abs(row['coefficient']):.2f} per std dev"
+            f"  {rank}. {row['feature']}: {direction} τιμή / price by ${abs(row['coefficient']):.2f} ανά std dev / per std dev"
         )
 
 
 def create_performance_comparison_plots(results_df, output_dir="results"):
     """
+    Δημιουργεί ολοκληρωμένες οπτικοποιήσεις που συγκρίνουν όλες τις ρυθμίσεις.
     Creates comprehensive visualizations comparing all configurations.
 
-    Args:
-        results_df (pd.DataFrame): Results from all configurations
-        output_dir (str): Directory to save plots
+    Παράμετροι / Args:
+        results_df (pd.DataFrame): Αποτελέσματα από όλες τις ρυθμίσεις / Results from all configurations
+        output_dir (str): Κατάλογος αποθήκευσης γραφημάτων / Directory to save plots
     """
     os.makedirs(output_dir, exist_ok=True)
 
@@ -475,11 +527,12 @@ def create_performance_comparison_plots(results_df, output_dir="results"):
 
 def create_actual_vs_predicted_plot(best_config, output_dir="results"):
     """
+    Δημιουργεί γράφημα διασποράς πραγματικών vs προβλεπόμενων τιμών για το καλύτερο μοντέλο.
     Creates scatter plot of actual vs predicted prices for best model.
 
-    Args:
-        best_config: Best configuration from results
-        output_dir (str): Directory to save plot
+    Παράμετροι / Args:
+        best_config: Καλύτερη ρύθμιση από αποτελέσματα / Best configuration from results
+        output_dir (str): Κατάλογος αποθήκευσης γραφήματος / Directory to save plot
     """
     # Load data for best configuration
     data = load_feature_set(best_config["features_path"])
@@ -546,11 +599,12 @@ def create_actual_vs_predicted_plot(best_config, output_dir="results"):
 
 def save_results_table(results_df, output_dir="results"):
     """
+    Αποθηκεύει λεπτομερή πίνακα αποτελεσμάτων σε CSV.
     Saves detailed results table to CSV.
 
-    Args:
-        results_df (pd.DataFrame): Results from all configurations
-        output_dir (str): Directory to save CSV
+    Παράμετροι / Args:
+        results_df (pd.DataFrame): Αποτελέσματα από όλες τις ρυθμίσεις / Results from all configurations
+        output_dir (str): Κατάλογος αποθήκευσης CSV / Directory to save CSV
     """
     os.makedirs(output_dir, exist_ok=True)
 
@@ -575,18 +629,19 @@ def save_results_table(results_df, output_dir="results"):
     # Save to CSV
     csv_path = os.path.join(output_dir, "baseline_linear_regression_results.csv")
     output_df.to_csv(csv_path, index=False)
-    print(f"✓ Saved results table: {csv_path}")
+    print(f"✓ Αποθηκεύτηκε πίνακας αποτελεσμάτων / Saved results table: {csv_path}")
 
     return csv_path
 
 
 def save_best_model(best_config, output_dir="models"):
     """
+    Αποθηκεύει το καλύτερο μοντέλο για μελλοντική χρήση.
     Saves the best model for later use.
 
-    Args:
-        best_config: Best configuration dictionary
-        output_dir (str): Directory to save model
+    Παράμετροι / Args:
+        best_config: Καλύτερη ρύθμιση dictionary / Best configuration dictionary
+        output_dir (str): Κατάλογος αποθήκευσης μοντέλου / Directory to save model
     """
     os.makedirs(output_dir, exist_ok=True)
 
@@ -606,37 +661,42 @@ def save_best_model(best_config, output_dir="models"):
     with open(model_path, "wb") as f:
         pickle.dump(model_info, f)
 
-    print(f"✓ Saved best model: {model_path}")
+    print(f"✓ Αποθηκεύτηκε το καλύτερο μοντέλο / Saved best model: {model_path}")
 
     return model_path
 
 
 def main():
     """
+    Κύρια συνάρτηση εκτέλεσης για ανάλυση baseline γραμμικής παλινδρόμησης.
     Main execution function for baseline linear regression analysis.
 
-    Workflow:
-        1. Train models on all configurations
-        2. Compare performance metrics
-        3. Identify best configuration
-        4. Display model parameters
-        5. Create visualizations
-        6. Save results and best model
+    Ροή Εργασιών / Workflow:
+        1. Εκπαίδευση μοντέλων σε όλες τις ρυθμίσεις / Train models on all configurations
+        2. Σύγκριση μετρικών απόδοσης / Compare performance metrics
+        3. Εντοπισμός καλύτερης ρύθμισης / Identify best configuration
+        4. Εμφάνιση παραμέτρων μοντέλου / Display model parameters
+        5. Δημιουργία οπτικοποιήσεων / Create visualizations
+        6. Αποθήκευση αποτελεσμάτων και καλύτερου μοντέλου / Save results and best model
     """
     print("=" * 80)
+    print("ΠΡΟΒΛΕΨΗ ΤΙΜΗΣ ΜΕΤΟΧΗΣ NFLX - BASELINE ΓΡΑΜΜΙΚΗ ΠΑΛΙΝΔΡΟΜΗΣΗ (ΕΡΓΑΣΙΑ Α)")
     print("NFLX STOCK PRICE PREDICTION - BASELINE LINEAR REGRESSION (TASK A)")
     print("=" * 80)
     print()
 
     # Train all configurations
+    print("Εκπαίδευση μοντέλων γραμμικής παλινδρόμησης σε όλες τις ρυθμίσεις...")
     print("Training linear regression models on all configurations...")
     print()
     results_df = train_all_configurations()
 
     print("=" * 80)
-    print("TRAINING COMPLETED")
+    print("Η ΕΚΠΑΙΔΕΥΣΗ ΟΛΟΚΛΗΡΩΘΗΚΕ / TRAINING COMPLETED")
     print("=" * 80)
-    print(f"Total configurations tested: {len(results_df)}")
+    print(
+        f"Σύνολο ρυθμίσεων που δοκιμάστηκαν / Total configurations tested: {len(results_df)}"
+    )
     print()
 
     # Analyze best configuration
@@ -648,28 +708,33 @@ def main():
     print()
 
     # Create visualizations
-    print("Creating visualizations...")
+    print("Δημιουργία οπτικοποιήσεων... / Creating visualizations...")
     create_performance_comparison_plots(results_df)
     create_actual_vs_predicted_plot(best_config)
     print()
 
     # Save results
-    print("Saving results...")
+    print("Αποθήκευση αποτελεσμάτων... / Saving results...")
     save_results_table(results_df)
     save_best_model(best_config)
     print()
 
     print("=" * 80)
+    print("✓ Η ΑΝΑΛΥΣΗ BASELINE ΓΡΑΜΜΙΚΗΣ ΠΑΛΙΝΔΡΟΜΗΣΗΣ ΟΛΟΚΛΗΡΩΘΗΚΕ")
     print("✓ BASELINE LINEAR REGRESSION ANALYSIS COMPLETED")
     print("=" * 80)
     print()
-    print("Key Findings:")
-    print(f"  Best Smoothing: {best_config['smoothing']}")
-    print(f"  Best Lag Window: {best_config['n_lags']} months")
+    print("Κύρια Ευρήματα (Key Findings):")
+    print(f"  Καλύτερη Εξομάλυνση (Best Smoothing): {best_config['smoothing']}")
+    print(
+        f"  Καλύτερο Παράθυρο Υστέρησης (Best Lag Window): {best_config['n_lags']} μήνες (months)"
+    )
     print(f"  Validation RMSE: ${best_config['val_rmse']:.2f}")
     print(f"  Validation R²: {best_config['val_r2']:.4f}")
     print()
-    print("Next Step: Run step4_polynomial_regression_regularization.py for Task B")
+    print("Επόμενο Βήμα (Next Step):")
+    print("  Εκτέλεση step4_polynomial_regression_regularization.py για Εργασία Β")
+    print("  Run step4_polynomial_regression_regularization.py for Task B")
 
 
 if __name__ == "__main__":
