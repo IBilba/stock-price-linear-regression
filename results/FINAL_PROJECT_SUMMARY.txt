@@ -1,0 +1,175 @@
+================================================================================
+NFLX STOCK PRICE PREDICTION - FINAL PROJECT SUMMARY
+Statistical Methods of Machine Learning - Task 1
+================================================================================
+
+Report Generated: 2025-11-17 20:55:27
+Stock Symbol: NFLX (Netflix, Inc.)
+Sector: Communication Services
+
+================================================================================
+TASK A: BASELINE LINEAR REGRESSION
+================================================================================
+
+Objective: Find relationship between past closing values and target price
+
+Configuration Tested:
+  - Smoothing levels: raw, sigma1, sigma2, sigma3
+  - Lag windows: 3, 6, 9, 12 months
+  - Total configurations: 16
+
+Best Configuration:
+  Smoothing: sigma3 (Gaussian filter, σ=3)
+  Lag window: 12 months
+  Features: 24 (12 close lags + 12 volume lags)
+
+Performance Metrics:
+  Training RMSE: $0.02
+  Training R²: 1.0000
+  Validation RMSE: $0.03
+  Validation R²: 1.0000
+
+Key Findings:
+  ✓ Sigma3 smoothing highly effective for noise reduction
+  ✓ 12-month lag window captures long-term patterns
+  ✓ Excellent generalization (small train-validation gap)
+  ✓ Near-perfect R² indicates strong predictive power
+
+================================================================================
+TASK B: POLYNOMIAL REGRESSION WITH REGULARIZATION
+================================================================================
+
+Objective: Capture non-linear relationships using polynomial features
+
+Methods Tested:
+  1. Ridge Regression (L2 regularization)
+  2. Lasso Regression (L1 regularization)
+
+Configuration:
+  Polynomial degree: 2
+  Features expanded: 24 → 325 (13.5x increase)
+  Alpha values tested: [0.001, 0.01, 0.1, 1.0, 10.0]
+
+Best Ridge Model (L2):
+  Alpha: 0.1
+  Validation RMSE: $8.98
+  Validation R²: 0.9898
+
+Best Lasso Model (L1):
+  Alpha: 0.001
+  Validation RMSE: $9.47
+  Validation R²: 0.9886
+  Sparsity: 19.1% (selected 263/325 features)
+
+Conclusion:
+  While polynomial features add complexity, the baseline linear
+  model outperforms due to effective smoothing preprocessing.
+  Regularization successfully prevents overfitting with 325 features.
+
+================================================================================
+TASK C: DIMENSIONALITY REDUCTION
+================================================================================
+
+Objective: Compare feature reduction techniques
+
+Methods Compared:
+
+1. PCA (Principal Component Analysis):
+   - Variance threshold: 95%
+   - Components selected: 3
+   - Validation RMSE: $131.07
+   - Validation R²: -1.17
+   - Note: Poor performance, lost critical information
+
+2. CFS (Correlation-based Feature Selection):
+   - Features selected: 1 (close_t-1)
+   - Validation RMSE: $21.91
+   - Validation R²: 0.9392
+   - Note: Single feature surprisingly effective
+
+3. Sequential Forward Selection (Wrapper):
+   - Features selected: 12 (all close lags)
+   - Validation RMSE: $0.03
+   - Validation R²: 1.0000
+   - Note: Identified that close lags are sufficient
+
+4. Baseline (All Features):
+   - Features: 24
+   - Validation RMSE: $0.03
+   - Validation R²: 1.0000
+
+Key Insights:
+  ✓ Wrapper method identified optimal feature subset
+  ✓ Close price lags more informative than volume
+  ✓ PCA ineffective for this highly smooth data
+  ✓ 12 features provide same performance as 24
+
+================================================================================
+TASK D: FUTURE PRICE PREDICTIONS
+================================================================================
+
+Predictions using best model (Baseline Linear, sigma3, 12 lags):
+
+  December 2025: $1175.48
+
+Prediction Methodology:
+  1. Use last 12 months of smoothed data (sigma3)
+  2. Scale features using training statistics
+  3. Apply trained linear regression model
+  4. Return prediction in original price scale
+
+Confidence Assessment:
+  Model Validation R²: 1.0000 (excellent)
+  Model Validation RMSE: $0.03 (very low)
+  → High confidence in predictions
+
+================================================================================
+OVERALL CONCLUSIONS
+================================================================================
+
+1. Data Preprocessing:
+   Heavy Gaussian smoothing (sigma=3) was crucial for success.
+   It eliminated noise while preserving trend information.
+
+2. Feature Engineering:
+   12-month lag window captures seasonal and long-term patterns.
+   Monthly aggregation provides appropriate time scale.
+
+3. Model Complexity:
+   Simple linear regression sufficient with proper preprocessing.
+   Polynomial features and complex methods unnecessary.
+
+4. Feature Selection:
+   Close price lags are most informative.
+   Volume adds marginal value in this configuration.
+
+5. Prediction Quality:
+   Near-perfect validation metrics indicate high reliability.
+   Smooth data leads to highly predictable patterns.
+
+================================================================================
+RECOMMENDATIONS
+================================================================================
+
+For Production Deployment:
+  1. Continue using sigma3 smoothing for preprocessing
+  2. Update model monthly with new data
+  3. Monitor prediction errors to detect regime changes
+  4. Consider ensemble with multiple smoothing levels
+  5. Add confidence intervals for predictions
+
+Limitations:
+  - Heavy smoothing may delay reaction to sudden changes
+  - Linear model assumes patterns continue
+  - External events (earnings, market crashes) not captured
+  - Limited validation data (11 months in 2025)
+
+Future Improvements:
+  - Incorporate external features (market indices, sentiment)
+  - Test on multiple stocks for generalization
+  - Implement online learning for model updates
+  - Add uncertainty quantification
+
+================================================================================
+END OF REPORT
+================================================================================
