@@ -5,7 +5,7 @@
 STEP 6: FUTURE PREDICTIONS AND FINAL ANALYSIS (TASK D)
 =======================================================
 
-Λειτουργίες / Functionalities:
+Λειτουργίες (Functionalities):
 - Φορτώνει όλα τα εκπαιδευμένα μοντέλα (γραμμικά, πολυωνυμικά, με L1/L2, μειωμένων διαστάσεων)
   Loads all trained models (linear, polynomial, L1/L2, dimensionality-reduced)
 - Προετοιμάζει χαρακτηριστικά για Δεκέμβριο 2025 και Ιανουάριο 2026 με lagged features
@@ -19,10 +19,10 @@ STEP 6: FUTURE PREDICTIONS AND FINAL ANALYSIS (TASK D)
 - Δημιουργεί τελική αναφορά με στατιστικά και συστάσεις
   Generates final report with statistics and recommendations
 
-Απαντά στην ΕΡΓΑΣΙΑ Δ / Addresses TASK D:
+Απαντά στην ΕΡΓΑΣΙΑ Δ (Addresses TASK D):
 "Provide price prediction for December 2025 and January 2026."
 
-Συγγραφέας / Author: Statistical Methods of Machine Learning - Task 1
+Συγγραφέας (Author): Statistical Methods of Machine Learning - Task 1
 """
 
 import os
@@ -84,19 +84,19 @@ def load_all_baseline_models():
     smoothing_levels = ["raw", "sigma1", "sigma2", "sigma3"]
     lag_configs = [3, 6, 9, 12]
 
-    print("\nΦόρτωση baseline μοντέλων / Loading baseline models:")
+    print("\nΦόρτωση baseline μοντέλων (Loading baseline models):")
     print("=" * 70)
 
     for smoothing in smoothing_levels:
         models[smoothing] = {}
         for n_lags in lag_configs:
             try:
-                # Φόρτωση scaler / Load scaler
+                # Φόρτωση scaler (Load scaler)
                 scaler_path = f"features/scaler_{smoothing}_{n_lags}lags.pkl"
                 with open(scaler_path, "rb") as f:
                     scaler = pickle.load(f)
 
-                # Φόρτωση χαρακτηριστικών για αξιολόγηση / Load features for evaluation
+                # Φόρτωση χαρακτηριστικών για αξιολόγηση (Load features for evaluation)
                 features_path = f"features/features_{smoothing}_{n_lags}lags.npz"
                 data = np.load(features_path, allow_pickle=True)
 
@@ -105,11 +105,11 @@ def load_all_baseline_models():
                 X_val = data["X_val"]
                 y_val = data["y_val"]
 
-                # Εκπαίδευση μοντέλου / Train model
+                # Εκπαίδευση μοντέλου (Train model)
                 model = LinearRegression()
                 model.fit(X_train, y_train)
 
-                # Υπολογισμός μετρικών / Compute metrics
+                # Υπολογισμός μετρικών (Compute metrics)
                 from sklearn.metrics import mean_squared_error, r2_score
 
                 val_pred = model.predict(X_val)
@@ -131,7 +131,7 @@ def load_all_baseline_models():
 
             except FileNotFoundError:
                 print(
-                    f"  ✗ {smoothing:8s} - {n_lags:2d} lags: Αρχεία δε βρέθηκαν / Files not found"
+                    f"  ✗ {smoothing:8s} - {n_lags:2d} lags: Αρχεία δε βρέθηκαν (Files not found)"
                 )
                 continue
 
@@ -144,19 +144,19 @@ def load_all_polynomial_models():
     Loads all polynomial regression models from CSV.
 
     Returns:
-        pd.DataFrame: DataFrame με αποτελέσματα polynomial models / with polynomial model results
+        pd.DataFrame: DataFrame με αποτελέσματα polynomial models (with polynomial model results)
     """
-    print("\nΦόρτωση polynomial regression μοντέλων / Loading polynomial models:")
+    print("\nΦόρτωση polynomial regression μοντέλων (Loading polynomial models):")
     print("=" * 70)
 
     try:
         poly_df = pd.read_csv("results/polynomial_regression_all_models_results.csv")
         print(
-            f"  ✓ Φορτώθηκαν {len(poly_df)} polynomial μοντέλα / Loaded {len(poly_df)} polynomial models"
+            f"  ✓ Φορτώθηκαν {len(poly_df)} polynomial μοντέλα (Loaded {len(poly_df)} polynomial models)"
         )
         return poly_df
     except Exception as e:
-        print(f"  ✗ Αποτυχία φόρτωσης / Failed to load: {str(e)}")
+        print(f"  ✗ Αποτυχία φόρτωσης (Failed to load): {str(e)}")
         return pd.DataFrame()
 
 
@@ -166,19 +166,19 @@ def load_all_dimensionality_reduction_models():
     Loads all dimensionality reduction models from CSV.
 
     Returns:
-        pd.DataFrame: DataFrame με αποτελέσματα dim-reduction models / with dim-reduction model results
+        pd.DataFrame: DataFrame με αποτελέσματα dim-reduction models (with dim-reduction model results)
     """
-    print("\nΦόρτωση dimensionality reduction μοντέλων / Loading dim-reduction models:")
+    print("\nΦόρτωση dimensionality reduction μοντέλων (Loading dim-reduction models):")
     print("=" * 70)
 
     try:
         dim_df = pd.read_csv("results/dimensionality_reduction_all_models_results.csv")
         print(
-            f"  ✓ Φορτώθηκαν {len(dim_df)} dim-reduction μοντέλα / Loaded {len(dim_df)} models"
+            f"  ✓ Φορτώθηκαν {len(dim_df)} dim-reduction μοντέλα (Loaded {len(dim_df)} models)"
         )
         return dim_df
     except Exception as e:
-        print(f"  ✗ Αποτυχία φόρτωσης / Failed to load: {str(e)}")
+        print(f"  ✗ Αποτυχία φόρτωσης (Failed to load): {str(e)}")
         return pd.DataFrame()
 
 
@@ -212,10 +212,10 @@ def create_prediction_features(df, n_lags=12, target_year=2025, target_month=12)
     Creates features for predicting a specific future month.
 
     Args:
-        df (pd.DataFrame): Ιστορικά μηνιαία δεδομένα / Historical monthly data
-        n_lags (int): Αριθμός μηνών για να κοιτάξουμε πίσω / Number of months to look back
-        target_year (int): Έτος για πρόβλεψη / Year to predict
-        target_month (int): Μήνας για πρόβλεψη (1-12) / Month to predict (1-12)
+        df (pd.DataFrame): Ιστορικά μηνιαία δεδομένα (Historical monthly data)
+        n_lags (int): Αριθμός μηνών για να κοιτάξουμε πίσω (Number of months to look back)
+        target_year (int): Έτος για πρόβλεψη (Year to predict)
+        target_month (int): Μήνας για πρόβλεψη (1-12) (Month to predict (1-12))
 
     Returns:
         tuple: (features_array, feature_dict) ή (None, None) αν δεν υπάρχουν δεδομένα
@@ -223,13 +223,13 @@ def create_prediction_features(df, n_lags=12, target_year=2025, target_month=12)
     """
     target_date = datetime(target_year, target_month, 1)
 
-    # Έλεγχος αν έχουμε αρκετά ιστορικά δεδομένα / Check if we have enough historical data
+    # Έλεγχος αν έχουμε αρκετά ιστορικά δεδομένα (Check if we have enough historical data)
     required_months = []
     for lag in range(1, n_lags + 1):
         lag_date = target_date - relativedelta(months=lag)
         required_months.append(lag_date)
 
-    # Εξαγωγή απαιτούμενων δεδομένων / Extract required data from df
+    # Εξαγωγή απαιτούμενων δεδομένων (Extract required data from df)
     features_dict = {}
     missing_months = []
 
@@ -245,7 +245,7 @@ def create_prediction_features(df, n_lags=12, target_year=2025, target_month=12)
     if missing_months:
         return None, None
 
-    # Μετατροπή σε πίνακα με τη σωστή σειρά / Convert to array in correct order
+    # Μετατροπή σε πίνακα με τη σωστή σειρά (Convert to array in correct order)
     close_features = [features_dict[f"close_t-{i}"] for i in range(1, n_lags + 1)]
     volume_features = [features_dict[f"volume_t-{i}"] for i in range(1, n_lags + 1)]
     features_array = np.array(close_features + volume_features).reshape(1, -1)
@@ -259,17 +259,17 @@ def make_prediction(model, scaler, features):
     Makes prediction using scaled features.
 
     Args:
-        model: Εκπαιδευμένο μοντέλο / Trained model
-        scaler: Προσαρμοσμένος StandardScaler / Fitted StandardScaler
-        features: Πίνακας χαρακτηριστικών / Features array
+        model: Εκπαιδευμένο μοντέλο (Trained model)
+        scaler: Προσαρμοσμένος StandardScaler (Fitted StandardScaler)
+        features: Πίνακας χαρακτηριστικών (Features array)
 
     Returns:
-        float: Προβλεφθείσα τιμή κλεισίματος / Predicted close price
+        float: Προβλεφθείσα τιμή κλεισίματος (Predicted close price)
     """
-    # Κλιμάκωση χαρακτηριστικών / Scale features
+    # Κλιμάκωση χαρακτηριστικών (Scale features)
     features_scaled = scaler.transform(features)
 
-    # Πρόβλεψη / Predict
+    # Πρόβλεψη (Predict)
     prediction = model.predict(features_scaled)[0]
 
     return prediction
@@ -282,27 +282,27 @@ def create_cascading_prediction(
     Δημιουργεί καταρρακτώδη πρόβλεψη χρησιμοποιώντας προηγούμενες προβλέψεις ως χαρακτηριστικά.
     Creates cascading prediction using previous predictions as features.
 
-    ΣΗΜΕΙΩΣΗ / NOTE: Αυτή η μέθοδος έχει μειωμένη ακρίβεια καθώς τα σφάλματα πρόβλεψης πολλαπλασιάζονται.
+    ΣΗΜΕΙΩΣΗ (NOTE): Αυτή η μέθοδος έχει μειωμένη ακρίβεια καθώς τα σφάλματα πρόβλεψης πολλαπλασιάζονται.
                      This method has reduced accuracy as prediction errors compound.
 
     Args:
-        df: DataFrame με ιστορικά δεδομένα / DataFrame with historical data
-        model: Μοντέλο πρόβλεψης / Prediction model
-        scaler: Scaler για χαρακτηριστικά / Scaler for features
-        n_lags: Αριθμός υστερήσεων / Number of lags
-        target_year: Έτος στόχου / Target year
-        target_month: Μήνας στόχου / Target month
-        dec_prediction: Πρόβλεψη Δεκεμβρίου / December prediction
+        df: DataFrame με ιστορικά δεδομένα (DataFrame with historical data)
+        model: Μοντέλο πρόβλεψης (Prediction model)
+        scaler: Scaler για χαρακτηριστικά (Scaler for features)
+        n_lags: Αριθμός υστερήσεων (Number of lags)
+        target_year: Έτος στόχου (Target year)
+        target_month: Μήνας στόχου (Target month)
+        dec_prediction: Πρόβλεψη Δεκεμβρίου (December prediction)
 
     Returns:
         tuple: (prediction, features_dict) ή (None, None)
     """
     target_date = datetime(target_year, target_month, 1)
 
-    # Δημιουργία εκτεταμένων δεδομένων με πρόβλεψη Δεκεμβρίου / Create extended data with December prediction
+    # Δημιουργία εκτεταμένων δεδομένων με πρόβλεψη Δεκεμβρίου (Create extended data with December prediction)
     df_extended = df.copy()
 
-    # Προσθήκη προβλεφθέντος Δεκεμβρίου / Add predicted December
+    # Προσθήκη προβλεφθέντος Δεκεμβρίου (Add predicted December)
     dec_date = datetime(2025, 12, 1)
     dec_row = pd.DataFrame(
         {
@@ -310,12 +310,12 @@ def create_cascading_prediction(
             "Close": [dec_prediction],
             "Volume": [
                 df.iloc[-1]["Volume"]
-            ],  # Χρήση τελευταίου όγκου / Use last volume
+            ],  # Χρήση τελευταίου όγκου (Use last volume)
         }
     )
     df_extended = pd.concat([df_extended, dec_row], ignore_index=True)
 
-    # Τώρα δημιουργία χαρακτηριστικών για Ιανουάριο / Now create features for January
+    # Τώρα δημιουργία χαρακτηριστικών για Ιανουάριο (Now create features for January)
     features, features_dict = create_prediction_features(
         df_extended, n_lags, target_year, target_month
     )
@@ -323,7 +323,7 @@ def create_cascading_prediction(
     if features is None:
         return None, None
 
-    # Πρόβλεψη / Predict
+    # Πρόβλεψη (Predict)
     prediction = make_prediction(model, scaler, features)
 
     return prediction, features_dict
@@ -451,12 +451,12 @@ def create_predictions_for_all_models(data_versions, models):
     Creates predictions for all baseline models.
 
     Returns:
-        pd.DataFrame: Αποτελέσματα για όλα τα μοντέλα / Results for all models
+        pd.DataFrame: Αποτελέσματα για όλα τα μοντέλα (Results for all models)
     """
     results = []
 
     print(
-        "\nΔημιουργία προβλέψεων για baseline μοντέλα / Creating predictions for baseline models:"
+        "\nΔημιουργία προβλέψεων για baseline μοντέλα (Creating predictions for baseline models):"
     )
     print("=" * 80)
 
@@ -470,13 +470,13 @@ def create_predictions_for_all_models(data_versions, models):
             scaler = model_info["scaler"]
             df = data_versions[smoothing]
 
-            # Πρόβλεψη Δεκεμβρίου 2025 / Predict December 2025
+            # Πρόβλεψη Δεκεμβρίου 2025 (Predict December 2025)
             dec_features, dec_dict = create_prediction_features(df, n_lags, 2025, 12)
 
             if dec_features is not None:
                 dec_pred = make_prediction(model, scaler, dec_features)
 
-                # Καταρρακτώδης πρόβλεψη για Ιανουάριο 2026 / Cascading prediction for January 2026
+                # Καταρρακτώδης πρόβλεψη για Ιανουάριο 2026 (Cascading prediction for January 2026)
                 jan_pred, jan_dict = create_cascading_prediction(
                     df, model, scaler, n_lags, 2026, 1, dec_pred
                 )
@@ -498,7 +498,7 @@ def create_predictions_for_all_models(data_versions, models):
                 )
             else:
                 print(
-                    f"  ✗ {smoothing:8s} - {n_lags:2d} lags: Ανεπαρκή δεδομένα / Insufficient data"
+                    f"  ✗ {smoothing:8s} - {n_lags:2d} lags: Ανεπαρκή δεδομένα (Insufficient data)"
                 )
 
     return pd.DataFrame(results)
@@ -622,7 +622,7 @@ def create_comprehensive_visualizations(
         dpi=300,
         bbox_inches="tight",
     )
-    print(f"\n✓ Αποθηκεύτηκε / Saved: comprehensive_predictions_comparison.png")
+    print(f"\n✓ Αποθηκεύτηκε (Saved): comprehensive_predictions_comparison.png")
     plt.close()
 
     # Γράφημα 2: Ιστορικά δεδομένα + Προβλέψεις καλύτερου μοντέλου
@@ -699,7 +699,7 @@ def create_comprehensive_visualizations(
         dpi=300,
         bbox_inches="tight",
     )
-    print(f"✓ Αποθηκεύτηκε / Saved: best_model_forecast_with_history.png")
+    print(f"✓ Αποθηκεύτηκε (Saved): best_model_forecast_with_history.png")
     plt.close()
 
     # Γράφημα 3: Validation RMSE Comparison - Καλύτερο γράφημα
@@ -758,7 +758,7 @@ def create_comprehensive_visualizations(
         dpi=300,
         bbox_inches="tight",
     )
-    print(f"✓ Αποθηκεύτηκε / Saved: validation_rmse_comparison_improved.png")
+    print(f"✓ Αποθηκεύτηκε (Saved): validation_rmse_comparison_improved.png")
     plt.close()
 
 
@@ -780,63 +780,63 @@ def generate_comprehensive_bilingual_report(
     report_lines = []
     report_lines.append("=" * 100)
     report_lines.append(
-        "ΣΥΝΟΛΙΚΗ ΑΝΑΦΟΡΑ - 96 ΜΟΝΤΕΛΑ / COMPREHENSIVE REPORT - 96 MODELS"
+        "ΣΥΝΟΛΙΚΗ ΑΝΑΦΟΡΑ - 96 ΜΟΝΤΕΛΑ (COMPREHENSIVE REPORT - 96 MODELS)"
     )
     report_lines.append("NFLX STOCK PRICE PREDICTION - NETFLIX, INC.")
     report_lines.append("=" * 100)
     report_lines.append("")
     report_lines.append(
-        f"Ημερομηνία / Date: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
+        f"Ημερομηνία (Date): {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
     )
     report_lines.append(
-        f"Σύνολο Μοντέλων / Total Models: {len(baseline_df) + len(poly_df) + len(dim_df)}"
+        f"Σύνολο Μοντέλων (Total Models): {len(baseline_df) + len(poly_df) + len(dim_df)}"
     )
     report_lines.append("")
     report_lines.append("=" * 100)
-    report_lines.append("★★★ ΣΥΝΟΛΙΚΑ ΚΑΛΥΤΕΡΟ ΜΟΝΤΕΛΟ / OVERALL BEST MODEL ★★★")
+    report_lines.append("★★★ ΣΥΝΟΛΙΚΑ ΚΑΛΥΤΕΡΟ ΜΟΝΤΕΛΟ (OVERALL BEST MODEL) ★★★")
     report_lines.append("=" * 100)
-    report_lines.append(f"Κατηγορία / Category: {overall_best_type}")
+    report_lines.append(f"Κατηγορία (Category): {overall_best_type}")
     report_lines.append(
-        f"Ρύθμιση / Configuration: {overall_best_model['smoothing']}, {int(overall_best_model['n_lags'])} lags"
+        f"Ρύθμιση (Configuration): {overall_best_model['smoothing']}, {int(overall_best_model['n_lags'])} lags"
     )
     if overall_best_type == "Polynomial":
-        report_lines.append(f"Τύπος / Type: {overall_best_model['model_type']}")
+        report_lines.append(f"Τύπος (Type): {overall_best_model['model_type']}")
     elif overall_best_type == "Dim-Reduction":
-        report_lines.append(f"Μέθοδος / Method: {overall_best_model['method']}")
+        report_lines.append(f"Μέθοδος (Method): {overall_best_model['method']}")
         report_lines.append(
-            f"Χαρακτηριστικά / Features: {int(overall_best_model['n_features'])}"
+            f"Χαρακτηριστικά (Features): {int(overall_best_model['n_features'])}"
         )
     report_lines.append(f"Validation RMSE: ${overall_best_model['val_rmse']:.4f}")
     report_lines.append(f"Validation R²: {overall_best_model['val_r2']:.6f}")
     report_lines.append(
-        f"Πρόβλεψη Δεκ 2025 / Dec 2025 Prediction: ${overall_best_model['dec_2025_pred']:.2f}"
+        f"Πρόβλεψη Δεκ 2025 (Dec 2025 Prediction): ${overall_best_model['dec_2025_pred']:.2f}"
     )
     report_lines.append(
-        f"Πρόβλεψη Ιαν 2026 / Jan 2026 Prediction: ${overall_best_model['jan_2026_pred']:.2f}"
+        f"Πρόβλεψη Ιαν 2026 (Jan 2026 Prediction): ${overall_best_model['jan_2026_pred']:.2f}"
     )
     report_lines.append("")
 
     # BASELINE MODELS
     report_lines.append("=" * 100)
-    report_lines.append("1. BASELINE LINEAR REGRESSION (16 ΜΟΝΤΕΛΑ / 16 MODELS)")
+    report_lines.append("1. BASELINE LINEAR REGRESSION (16 ΜΟΝΤΕΛΑ (16 MODELS))")
     report_lines.append("=" * 100)
     report_lines.append("")
     baseline_sorted = baseline_df.sort_values("val_rmse")
     best_baseline = baseline_sorted.iloc[0]
-    report_lines.append(f"★ ΚΑΛΥΤΕΡΟ BASELINE / BEST BASELINE:")
+    report_lines.append(f"★ ΚΑΛΥΤΕΡΟ BASELINE (BEST BASELINE):")
     report_lines.append(
-        f"  Ρύθμιση / Config: {best_baseline['smoothing']}, {int(best_baseline['n_lags'])} lags"
+        f"  Ρύθμιση (Config): {best_baseline['smoothing']}, {int(best_baseline['n_lags'])} lags"
     )
     report_lines.append(f"  Validation RMSE: ${best_baseline['val_rmse']:.4f}")
     report_lines.append(f"  Validation R²: {best_baseline['val_r2']:.6f}")
     report_lines.append(
-        f"  Πρόβλεψη Δεκ 2025 / Dec 2025 Prediction: ${best_baseline['dec_2025_pred']:.2f}"
+        f"  Πρόβλεψη Δεκ 2025 (Dec 2025 Prediction): ${best_baseline['dec_2025_pred']:.2f}"
     )
     report_lines.append(
-        f"  Πρόβλεψη Ιαν 2026 / Jan 2026 Prediction: ${best_baseline['jan_2026_pred']:.2f}"
+        f"  Πρόβλεψη Ιαν 2026 (Jan 2026 Prediction): ${best_baseline['jan_2026_pred']:.2f}"
     )
     report_lines.append("")
-    report_lines.append("Top 5 Baseline Models / Κορυφαία 5 Baseline:")
+    report_lines.append("Top 5 Baseline Models (Κορυφαία 5 Baseline):")
     report_lines.append(
         f"{'Smoothing':<12} {'Lags':<6} {'Val RMSE':<15} {'Val R²':<12}"
     )
@@ -851,27 +851,27 @@ def generate_comprehensive_bilingual_report(
     best_poly_report = None
     if not poly_df.empty:
         report_lines.append("=" * 100)
-        report_lines.append("2. POLYNOMIAL REGRESSION (32 ΜΟΝΤΕΛΑ / 32 MODELS)")
+        report_lines.append("2. POLYNOMIAL REGRESSION (32 ΜΟΝΤΕΛΑ (32 MODELS))")
         report_lines.append("=" * 100)
         report_lines.append("")
         poly_sorted = poly_df.sort_values("val_rmse")
         best_poly_report = poly_sorted.iloc[0]
-        report_lines.append(f"★ ΚΑΛΥΤΕΡΟ POLYNOMIAL / BEST POLYNOMIAL:")
+        report_lines.append(f"★ ΚΑΛΥΤΕΡΟ POLYNOMIAL (BEST POLYNOMIAL):")
         report_lines.append(
-            f"  Ρύθμιση / Config: {best_poly_report['smoothing']}, {int(best_poly_report['n_lags'])} lags"
+            f"  Ρύθμιση (Config): {best_poly_report['smoothing']}, {int(best_poly_report['n_lags'])} lags"
         )
-        report_lines.append(f"  Τύπος / Type: {best_poly_report['model_type']}")
+        report_lines.append(f"  Τύπος (Type): {best_poly_report['model_type']}")
         if "dec_2025_pred" in best_poly_report:
             report_lines.append(
-                f"  Πρόβλεψη Δεκ 2025 / Dec 2025 Prediction: ${best_poly_report['dec_2025_pred']:.2f}"
+                f"  Πρόβλεψη Δεκ 2025 (Dec 2025 Prediction): ${best_poly_report['dec_2025_pred']:.2f}"
             )
             report_lines.append(
-                f"  Πρόβλεψη Ιαν 2026 / Jan 2026 Prediction: ${best_poly_report['jan_2026_pred']:.2f}"
+                f"  Πρόβλεψη Ιαν 2026 (Jan 2026 Prediction): ${best_poly_report['jan_2026_pred']:.2f}"
             )
         report_lines.append(f"  Validation RMSE: ${best_poly_report['val_rmse']:.4f}")
         report_lines.append(f"  Validation R²: {best_poly_report['val_r2']:.6f}")
         report_lines.append("")
-        report_lines.append("Top 5 Polynomial Models / Κορυφαία 5 Polynomial:")
+        report_lines.append("Top 5 Polynomial Models (Κορυφαία 5 Polynomial):")
         report_lines.append(
             f"{'Smoothing':<12} {'Lags':<6} {'Type':<8} {'Val RMSE':<15} {'Val R²':<12}"
         )
@@ -887,32 +887,32 @@ def generate_comprehensive_bilingual_report(
     best_dim_report = None
     if not dim_df.empty:
         report_lines.append("=" * 100)
-        report_lines.append("3. DIMENSIONALITY REDUCTION (48 ΜΟΝΤΕΛΑ / 48 MODELS)")
+        report_lines.append("3. DIMENSIONALITY REDUCTION (48 ΜΟΝΤΕΛΑ (48 MODELS))")
         report_lines.append("=" * 100)
         report_lines.append("")
         dim_sorted = dim_df.sort_values("val_rmse")
         best_dim_report = dim_sorted.iloc[0]
         report_lines.append(
-            f"★ ΚΑΛΥΤΕΡΟ DIMENSIONALITY REDUCTION / BEST DIM-REDUCTION:"
+            f"★ ΚΑΛΥΤΕΡΟ DIMENSIONALITY REDUCTION (BEST DIM-REDUCTION):"
         )
         report_lines.append(
-            f"  Ρύθμιση / Config: {best_dim_report['smoothing']}, {int(best_dim_report['n_lags'])} lags"
+            f"  Ρύθμιση (Config): {best_dim_report['smoothing']}, {int(best_dim_report['n_lags'])} lags"
         )
-        report_lines.append(f"  Μέθοδος / Method: {best_dim_report['method']}")
+        report_lines.append(f"  Μέθοδος (Method): {best_dim_report['method']}")
         report_lines.append(
-            f"  Χαρακτηριστικά / Features: {int(best_dim_report['n_features'])}"
+            f"  Χαρακτηριστικά (Features): {int(best_dim_report['n_features'])}"
         )
         if "dec_2025_pred" in best_dim_report:
             report_lines.append(
-                f"  Πρόβλεψη Δεκ 2025 / Dec 2025 Prediction: ${best_dim_report['dec_2025_pred']:.2f}"
+                f"  Πρόβλεψη Δεκ 2025 (Dec 2025 Prediction): ${best_dim_report['dec_2025_pred']:.2f}"
             )
             report_lines.append(
-                f"  Πρόβλεψη Ιαν 2026 / Jan 2026 Prediction: ${best_dim_report['jan_2026_pred']:.2f}"
+                f"  Πρόβλεψη Ιαν 2026 (Jan 2026 Prediction): ${best_dim_report['jan_2026_pred']:.2f}"
             )
         report_lines.append(f"  Validation RMSE: ${best_dim_report['val_rmse']:.4f}")
         report_lines.append(f"  Validation R²: {best_dim_report['val_r2']:.6f}")
         report_lines.append("")
-        report_lines.append("Top 5 Dim-Reduction Models / Κορυφαία 5 Dim-Reduction:")
+        report_lines.append("Top 5 Dim-Reduction Models (Κορυφαία 5 Dim-Reduction):")
         report_lines.append(
             f"{'Smoothing':<12} {'Lags':<6} {'Method':<20} {'Features':<10} {'Val RMSE':<15} {'Val R²':<12}"
         )
@@ -926,10 +926,10 @@ def generate_comprehensive_bilingual_report(
 
     # OVERALL COMPARISON
     report_lines.append("=" * 100)
-    report_lines.append("4. ΣΥΝΟΛΙΚΗ ΣΥΓΚΡΙΣΗ / OVERALL COMPARISON")
+    report_lines.append("4. ΣΥΝΟΛΙΚΗ ΣΥΓΚΡΙΣΗ (OVERALL COMPARISON)")
     report_lines.append("=" * 100)
     report_lines.append("")
-    report_lines.append("Καλύτερο από κάθε κατηγορία / Best from each category:")
+    report_lines.append("Καλύτερο από κάθε κατηγορία (Best from each category):")
     report_lines.append("-" * 100)
     report_lines.append(
         f"Baseline:         RMSE = ${best_baseline['val_rmse']:.4f}, R² = {best_baseline['val_r2']:.6f}"
@@ -946,7 +946,7 @@ def generate_comprehensive_bilingual_report(
 
     # NOTES
     report_lines.append("=" * 100)
-    report_lines.append("ΣΗΜΕΙΩΣΕΙΣ / NOTES")
+    report_lines.append("ΣΗΜΕΙΩΣΕΙΣ (NOTES)")
     report_lines.append("=" * 100)
     report_lines.append("")
     report_lines.append(
@@ -961,10 +961,10 @@ def generate_comprehensive_bilingual_report(
         "   R²: Coefficient of determination (0-1, where 1 = perfect fit)"
     )
     report_lines.append("")
-    report_lines.append("3. Smoothing Levels / Επίπεδα Εξομάλυνσης:")
-    report_lines.append("   • raw: Χωρίς εξομάλυνση / No smoothing")
+    report_lines.append("3. Smoothing Levels (Επίπεδα Εξομάλυνσης):")
+    report_lines.append("   • raw: Χωρίς εξομάλυνση (No smoothing)")
     report_lines.append(
-        "   • sigma1, sigma2, sigma3: Gaussian filtering με σ=1,2,3 / with σ=1,2,3"
+        "   • sigma1, sigma2, sigma3: Gaussian filtering με σ=1,2,3 (with σ=1,2,3)"
     )
     report_lines.append("")
     report_lines.append(
@@ -975,7 +975,7 @@ def generate_comprehensive_bilingual_report(
     )
     report_lines.append("")
     report_lines.append(
-        "5. Dimensionality Reduction Methods / Μέθοδοι Μείωσης Διαστάσεων:"
+        "5. Dimensionality Reduction Methods (Μέθοδοι Μείωσης Διαστάσεων):"
     )
     report_lines.append("   • PCA: Principal Component Analysis")
     report_lines.append("   • CFS: Correlation-based Feature Selection")
@@ -989,7 +989,7 @@ def generate_comprehensive_bilingual_report(
         f.write("\n".join(report_lines))
 
     print(
-        f"✓ Αποθηκεύτηκε συνολική αναφορά / Comprehensive report saved: {report_path}"
+        f"✓ Αποθηκεύτηκε συνολική αναφορά (Comprehensive report saved): {report_path}"
     )
     report_lines.append("")
     report_lines.append("1. Πρόβλεψη Ιανουαρίου 2026:")
@@ -1001,7 +1001,7 @@ def generate_comprehensive_bilingual_report(
     report_lines.append("   - Μειωμένη ακρίβεια λόγω πολλαπλασιασμού σφαλμάτων")
     report_lines.append("   - Reduced accuracy due to error compounding")
     report_lines.append("")
-    report_lines.append("   ΣΗΜΑΝΤΙΚΟ / IMPORTANT:")
+    report_lines.append("   ΣΗΜΑΝΤΙΚΟ (IMPORTANT):")
     report_lines.append("   Αν προστεθούν πραγματικά δεδομένα για Δεκέμβριο 2025:")
     report_lines.append("   If actual December 2025 data becomes available:")
     report_lines.append("   • Το script θα τα ανιχνεύσει αυτόματα")
@@ -1031,11 +1031,11 @@ def generate_comprehensive_bilingual_report(
     report_lines.append("")
     report_lines.append("=" * 80)
 
-    # Αποθήκευση / Save
+    # Αποθήκευση (Save)
     with open(report_path, "w", encoding="utf-8") as f:
         f.write("\n".join(report_lines))
 
-    print(f"\n✓ Αποθηκεύτηκε δίγλωσση αναφορά / Saved bilingual report: {report_path}")
+    print(f"\n✓ Αποθηκεύτηκε δίγλωσση αναφορά (Saved bilingual report): {report_path}")
 
     return report_path
 
@@ -1049,25 +1049,25 @@ def main():
     print("ΠΡΟΒΛΕΨΕΙΣ ΤΙΜΩΝ ΜΕΤΟΧΩΝ NFLX - ΣΥΝΟΛΙΚΗ ΑΝΑΛΥΣΗ 96 ΜΟΝΤΕΛΩΝ")
     print("NFLX STOCK PRICE PREDICTIONS - COMPREHENSIVE 96-MODEL ANALYSIS")
     print("=" * 80)
-    print()
-
-    # 1. Φόρτωση όλων των δεδομένων / Load all data
-    print("Βήμα 1: Φόρτωση δεδομένων / Step 1: Loading data")
+    print(
+        "\nΔημιουργία προβλέψεων για baseline μοντέλα (Creating predictions for baseline models):"
+    )
+    print("Βήμα 1: Φόρτωση δεδομένων (Step 1: Loading data)")
     print("-" * 80)
     data_versions = load_all_monthly_data()
 
-    # 2. Φόρτωση όλων των μοντέλων / Load all models
-    print("\nΒήμα 2: Φόρτωση μοντέλων / Step 2: Loading models")
+    # 2. Φόρτωση όλων των μοντέλων (Load all models)
+    print("\nΒήμα 2: Φόρτωση μοντέλων (Step 2: Loading models)")
     print("-" * 80)
     baseline_models = load_all_baseline_models()
     poly_df = load_all_polynomial_models()
     dim_df = load_all_dimensionality_reduction_models()
 
-    # Συνολικά μοντέλα / Total models
+    # Συνολικά μοντέλα (Total models)
     total_models = len([m for s in baseline_models.values() for m in s.values()])
     total_models += len(poly_df) + len(dim_df)
     print(
-        f"\n★ Συνολικά φορτώθηκαν {total_models} μοντέλα / Total loaded {total_models} models"
+        f"\n★ Συνολικά φορτώθηκαν {total_models} μοντέλα (Total loaded {total_models} models)"
     )
     print(
         f"  • Baseline: {len([m for s in baseline_models.values() for m in s.values()])} μοντέλα"
@@ -1075,13 +1075,13 @@ def main():
     print(f"  • Polynomial: {len(poly_df)} μοντέλα")
     print(f"  • Dimensionality Reduction: {len(dim_df)} μοντέλα")
 
-    # 3. Δημιουργία προβλέψεων για baseline μοντέλα / Create predictions for baseline
-    print("\nΒήμα 3: Δημιουργία προβλέψεων / Step 3: Creating predictions")
+    # 3. Δημιουργία προβλέψεων για baseline μοντέλα (Create predictions for baseline)
+    print("\nΒήμα 3: Δημιουργία προβλέψεων (Step 3: Creating predictions)")
     print("-" * 80)
     predictions_df = create_predictions_for_all_models(data_versions, baseline_models)
 
-    # 4. Εύρεση καλύτερου μοντέλου ΑΠΟ ΟΛΟΥΣ / Find best model FROM ALL
-    print("\nΒήμα 4: Ανάλυση καλύτερων μοντέλων / Step 4: Analyzing best models")
+    # 4. Εύρεση καλύτερου μοντέλου ΑΠΟ ΟΛΟΥΣ (Find best model FROM ALL)
+    print("\nΒήμα 4: Ανάλυση καλύτερων μοντέλων (Step 4: Analyzing best models)")
     print("-" * 80)
 
     # Καλύτερο baseline
@@ -1101,7 +1101,7 @@ def main():
         create_predictions_for_poly_and_dim_models(data_versions, poly_df, dim_df)
     )
 
-    # Αρχικοποίηση μεταβλητών / Initialize variables
+    # Αρχικοποίηση μεταβλητών (Initialize variables)
     best_poly = None
     best_dim = None
 
@@ -1134,7 +1134,7 @@ def main():
         print(f"  Δεκέμβριος 2025 (December 2025): ${best_dim['dec_2025_pred']:.2f}")
         print(f"  Ιανουάριος 2026 (January 2026): ${best_dim['jan_2026_pred']:.2f}")
 
-    # Εύρεση του ΣΥΝΟΛΙΚΑ καλύτερου μοντέλου / Find OVERALL best model
+    # Εύρεση του ΣΥΝΟΛΙΚΑ καλύτερου μοντέλου (Find OVERALL best model)
     print(f"\n" + "=" * 80)
     print(f"★★★ ΣΥΝΟΛΙΚΑ ΚΑΛΥΤΕΡΟ ΜΟΝΤΕΛΟ (OVERALL BEST MODEL) ★★★")
     print("=" * 80)
@@ -1177,13 +1177,13 @@ def main():
     print(f"     If actual December data becomes available, it will be used instead.")
     print("=" * 80)
 
-    # 5. Δημιουργία απεικονίσεων / Create visualizations
-    print("\nΒήμα 5: Δημιουργία απεικονίσεων / Step 5: Creating visualizations")
+    # 5. Δημιουργία απεικονίσεων (Create visualizations)
+    print("\nΒήμα 5: Δημιουργία απεικονίσεων (Step 5: Creating visualizations)")
     print("-" * 80)
     create_comprehensive_visualizations(predictions_df, data_versions)
 
-    # 6. Δημιουργία αναφοράς με όλα τα μοντέλα / Generate report with all models
-    print("\nΒήμα 6: Δημιουργία αναφοράς / Step 6: Generating report")
+    # 6. Δημιουργία αναφοράς με όλα τα μοντέλα (Generate report with all models)
+    print("\nΒήμα 6: Δημιουργία αναφοράς (Step 6: Generating report)")
     print("-" * 80)
     generate_comprehensive_bilingual_report(
         predictions_df,
@@ -1193,13 +1193,13 @@ def main():
         overall_best_model,
     )
 
-    # 7. Αποθήκευση αποτελεσμάτων / Save results
-    print("\nΒήμα 7: Αποθήκευση αποτελεσμάτων / Step 7: Saving results")
+    # 7. Αποθήκευση αποτελεσμάτων (Save results)
+    print("\nΒήμα 7: Αποθήκευση αποτελεσμάτων (Step 7: Saving results)")
     print("-" * 80)
     predictions_df.to_csv(
         "results/baseline_predictions_dec_jan_2025_2026.csv", index=False
     )
-    print("✓ Αποθηκεύτηκε / Saved: baseline_predictions_dec_jan_2025_2026.csv")
+    print("✓ Αποθηκεύτηκε (Saved): baseline_predictions_dec_jan_2025_2026.csv")
 
     print("\n" + "=" * 80)
     print("ΟΛΟΚΛΗΡΩΘΗΚΕ ΕΠΙΤΥΧΩΣ (COMPLETED SUCCESSFULLY)")

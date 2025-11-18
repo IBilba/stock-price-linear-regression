@@ -18,18 +18,18 @@ This script implements polynomial regression with regularization:
 4. Εκτελεί grid search για βέλτιστο alpha (ισχύς κανονικοποίησης)
    Performs grid search for optimal alpha (regularization strength)
 
-Αυτό απαντά στην ΕΡΓΑΣΙΑ Β / This addresses TASK B:
+Αυτό απαντά στην ΕΡΓΑΣΙΑ Β (This addresses TASK B):
 "Χρησιμοποιήστε πολυωνυμική παλινδρόμηση με L1, L2 κανονικοποίηση."
 "Use a polynomial regression model with L1, L2 normalization norms."
 
-Βασικές Έννοιες / Key Concepts:
+Βασικές Έννοιες (Key Concepts):
 - Πολυωνυμικά χαρακτηριστικά συλλαμβάνουν μη-γραμμικές σχέσεις
-  Polynomial features capture non-linear relationships
-- L1 (Lasso): Αραιά μοντέλα, επιλογή χαρακτηριστικών / Sparse models, feature selection
+  (Polynomial features capture non-linear relationships)
+- L1 (Lasso): Αραιά μοντέλα, επιλογή χαρακτηριστικών (Sparse models, feature selection)
 - L2 (Ridge): Διαχειρίζεται multicollinearity, αποτρέπει overfitting
-  Handles multicollinearity, prevents overfitting
+  (Handles multicollinearity, prevents overfitting)
 
-Συγγραφέας / Author: Statistical Methods of Machine Learning - Task 1
+Συγγραφέας (Author): Statistical Methods of Machine Learning - Task 1
 """
 
 import os
@@ -51,11 +51,11 @@ def load_feature_set(features_path):
     Φορτώνει ένα αποθηκευμένο σύνολο χαρακτηριστικών.
     Loads a saved feature set.
 
-    Παράμετροι / Args:
-        features_path (str): Διαδρομή προς αρχείο .npz / Path to .npz file
+    Παράμετροι (Args):
+        features_path (str): Διαδρομή προς αρχείο .npz (Path to .npz file)
 
-    Επιστρέφει / Returns:
-        dict: Δεδομένα χαρακτηριστικών / Feature data
+    Επιστρέφει (Returns):
+        dict: Δεδομένα χαρακτηριστικών (Feature data)
     """
     data = np.load(features_path, allow_pickle=True)
     return {
@@ -83,45 +83,45 @@ def create_polynomial_features(X_train, X_val, degree):
     Δημιουργεί πολυωνυμικά χαρακτηριστικά από χαρακτηριστικά εισόδου.
     Creates polynomial features from input features.
 
-    Παράμετροι / Args:
-        X_train: Χαρακτηριστικά εκπαίδευσης / Training features
-        X_val: Χαρακτηριστικά επικύρωσης / Validation features
-        degree (int): Βαθμός πολυωνύμου / Polynomial degree
+    Παράμετροι (Args):
+        X_train: Χαρακτηριστικά εκπαίδευσης (Training features)
+        X_val: Χαρακτηριστικά επικύρωσης (Validation features)
+        degree (int): Βαθμός πολυωνύμου (Polynomial degree)
 
-    Επιστρέφει / Returns:
+    Επιστρέφει (Returns):
         tuple: (X_train_poly, X_val_poly, poly_transformer, new_feature_names)
 
-    Μετασχηματισμός Πολυωνυμικών Χαρακτηριστικών / Polynomial Feature Transformation:
+    Μετασχηματισμός Πολυωνυμικών Χαρακτηριστικών (Polynomial Feature Transformation):
 
-        Βαθμός 1 / Degree 1: Αρχικά χαρακτηριστικά / Original features [x₁, x₂, x₃, ...]
+        Βαθμός 1 (Degree 1): Αρχικά χαρακτηριστικά (Original features) [x₁, x₂, x₃, ...]
 
-        Βαθμός 2 / Degree 2: [1, x₁, x₂, x₃, x₁², x₁x₂, x₁x₃, x₂², x₂x₃, x₃², ...]
-                  - Προσθέτει τετραγωνικούς όρους / Adds squared terms (x²)
-                  - Προσθέτει όρους αλληλεπίδρασης / Adds interaction terms (x₁x₂)
+        Βαθμός 2 (Degree 2): [1, x₁, x₂, x₃, x₁², x₁x₂, x₁x₃, x₂², x₂x₃, x₃², ...]
+                  - Προσθέτει τετραγωνικούς όρους (Adds squared terms) (x²)
+                  - Προσθέτει όρους αλληλεπίδρασης (Adds interaction terms) (x₁x₂)
 
-        Βαθμός 3 / Degree 3: [1, x₁, x₂, ..., x₁², x₁x₂, ..., x₁³, x₁²x₂, ...]
-                  - Προσθέτει κυβικούς όρους / Adds cubic terms (x³)
-                  - Προσθέτει αλληλεπιδράσεις υψηλότερης τάξης / Adds higher-order interactions
+        Βαθμός 3 (Degree 3): [1, x₁, x₂, ..., x₁², x₁x₂, ..., x₁³, x₁²x₂, ...]
+                  - Προσθέτει κυβικούς όρους (Adds cubic terms) (x³)
+                  - Προσθέτει αλληλεπιδράσεις υψηλότερης τάξης (Adds higher-order interactions)
 
-    Πλεονεκτήματα / Benefits:
-        - Συλλαμβάνει μη-γραμμικές σχέσεις / Captures non-linear relationships
+    Πλεονεκτήματα (Benefits):
+        - Συλλαμβάνει μη-γραμμικές σχέσεις (Captures non-linear relationships)
         - Οι τιμές μετοχών μπορεί να έχουν τετραγωνικές τάσεις ή αλληλεπιδράσεις
-          Stock prices may have quadratic trends or interactions
-        - Παράδειγμα / Example: close_t-1 * volume_t-1 (αλληλεπίδραση τιμής-όγκου / price-volume interaction)
+          (Stock prices may have quadratic trends or interactions)
+        - Παράδειγμα (Example): close_t-1 * volume_t-1 (αλληλεπίδραση τιμής-όγκου (price-volume interaction))
 
-    Κίνδυνοι / Risks:
+    Κίνδυνοι (Risks):
         - Εκθετική αύξηση χαρακτηριστικών (κατάρα της διαστατικότητας)
-          Exponential growth in features (curse of dimensionality)
-        - 24 χαρακτηριστικά / features → βαθμός / degree 2 → 300 χαρακτηριστικά / features
-        - 24 χαρακτηριστικά / features → βαθμός / degree 3 → 2,600 χαρακτηριστικά / features
+          (Exponential growth in features (curse of dimensionality))
+        - 24 χαρακτηριστικά (features) → βαθμός (degree) 2 → 300 χαρακτηριστικά (features)
+        - 24 χαρακτηριστικά (features) → βαθμός (degree) 3 → 2,600 χαρακτηριστικά (features)
         - Υψηλός κίνδυνος overfitting χωρίς κανονικοποίηση
-          High risk of overfitting without regularization
+          (High risk of overfitting without regularization)
 
-    Γιατί η Κανονικοποίηση είναι Κρίσιμη / Why Regularization is Critical:
+    Γιατί η Κανονικοποίηση είναι Κρίσιμη (Why Regularization is Critical):
         Με πολυωνυμικά χαρακτηριστικά, έχουμε πολύ περισσότερες παραμέτρους από δείγματα
-        With polynomial features, we have far more parameters than samples
+        (With polynomial features, we have far more parameters than samples)
         Αυτό οδηγεί σε σοβαρό overfitting χωρίς L1/L2 ποινές
-        This leads to severe overfitting without L1/L2 penalties
+        (This leads to severe overfitting without L1/L2 penalties)
     """
     poly = PolynomialFeatures(degree=degree, include_bias=True)
 
@@ -132,14 +132,13 @@ def create_polynomial_features(X_train, X_val, degree):
     # Get feature names
     feature_names = poly.get_feature_names_out()
 
-    print(f"  Πολυωνυμικός βαθμός / Polynomial degree {degree}:")
-    print(f"    Αρχικά χαρακτηριστικά / Original features: {X_train.shape[1]}")
+    print(f"  Πολυωνυμικός βαθμός (Polynomial degree) {degree}:")
+    print(f"    Αρχικά χαρακτηριστικά (Original features): {X_train.shape[1]}")
     print(
-        f"    Πολυωνυμικά χαρακτηριστικά / Polynomial features: {X_train_poly.shape[1]}"
+        f"    Πολυωνυμικά χαρακτηριστικά (Polynomial features): {X_train_poly.shape[1]}"
     )
-    print(
-        f"    Αναλογία επέκτασης / Expansion ratio: {X_train_poly.shape[1] / X_train.shape[1]:.1f}x"
-    )
+    expansion_ratio = X_train_poly.shape[1] / X_train.shape[1]
+    print(f"    Αναλογία επέκτασης (Expansion ratio): {expansion_ratio:.1f}x")
 
     return X_train_poly, X_val_poly, poly, feature_names
 
@@ -149,28 +148,28 @@ def train_ridge_regression(X_train, y_train, X_val, y_val, alpha_values):
     Εκπαιδεύει Ridge παλινδρόμηση με L2 κανονικοποίηση.
     Trains Ridge regression with L2 regularization.
 
-    Παράμετροι / Args:
-        X_train, y_train: Δεδομένα εκπαίδευσης / Training data
-        X_val, y_val: Δεδομένα επικύρωσης / Validation data
-        alpha_values: Λίστα ισχύος κανονικοποίησης προς δοκιμή / List of regularization strengths to test
+    Παράμετροι (Args):
+        X_train, y_train: Δεδομένα εκπαίδευσης (Training data)
+        X_val, y_val: Δεδομένα επικύρωσης (Validation data)
+        alpha_values: Λίστα ισχύος κανονικοποίησης προς δοκιμή (List of regularization strengths to test)
 
-    Επιστρέφει / Returns:
-        dict: Καλύτερο μοντέλο και αποτελέσματα / Best model and results
+    Επιστρέφει (Returns):
+        dict: Καλύτερο μοντέλο και αποτελέσματα (Best model and results)
 
-    Ridge Παλινδρόμηση (L2 Κανονικοποίηση) / Ridge Regression (L2 Regularization):
+    Ridge Παλινδρόμηση (L2 Κανονικοποίηση) (Ridge Regression (L2 Regularization)):
 
-        Αντικείμενο / Objective: Minimize Σ(y - ŷ)² + α·Σ(β²)
+        Αντικείμενο (Objective): Minimize Σ(y - ŷ)² + α·Σ(β²)
                    ├──────┬──────┘   └───┬────┘
-                   Συνάρτηση σφάλματος / Loss function      L2 ποινή / penalty
+                   Συνάρτηση σφάλματος (Loss function)      L2 ποινή (penalty)
 
-        Όπου / Where:
-        - α (alpha): Ισχύς κανονικοποίησης / Regularization strength
-        - β: Συντελεστές μοντέλου / Model coefficients
-        - Σ(β²): Άθροισμα τετραγωνικών συντελεστών / Sum of squared coefficients
+        Όπου (Where):
+        - α (alpha): Ισχύς κανονικοποίησης (Regularization strength)
+        - β: Συντελεστές μοντέλου (Model coefficients)
+        - Σ(β²): Άθροισμα τετραγωνικών συντελεστών (Sum of squared coefficients)
 
-    Πώς λειτουργεί το L2 / How L2 Works:
-        - Ποινή σε μεγάλους συντελεστές / Penalizes large coefficients
-        - Ενθαρρύνει μικρούς αλλά μη μηδενικούς συντελεστές / Encourages small but non-zero coefficients
+    Πώς λειτουργεί το L2 (How L2 Works):
+        - Ποινή σε μεγάλους συντελεστές (Penalizes large coefficients)
+        - Ενθαρρύνει μικρούς αλλά μη μηδενικούς συντελεστές (Encourages small but non-zero coefficients)
         - Όλα τα χαρακτηριστικά παραμένουν στο μοντέλο (όχι αραίωση)
           All features remain in model (no sparsity)
         - Βοηθά με multicollinearity (συσχετισμένα χαρακτηριστικά)
@@ -179,30 +178,30 @@ def train_ridge_regression(X_train, y_train, X_val, y_val, alpha_values):
           Shrinks coefficients toward zero but never exactly zero
 
     Παράμετρος Alpha:
-        - α = 0: Χωρίς κανονικοποίηση (στανδαρδ γραμμική παλινδρόμηση) / No regularization (standard linear regression)
-        - Μικρό α (0.001, 0.01): Ελαφριά κανονικοποίηση / Small α (0.001, 0.01): Light regularization
-        - Μέτριο α (0.1, 1.0): Μέτρια κανονικοποίηση / Medium α (0.1, 1.0): Moderate regularization
-        - Μεγάλο α (10, 100): Ισχυρή κανονικοποίηση (συντελεστές → 0) / Large α (10, 100): Heavy regularization (coefficients → 0)
+        - α = 0: Χωρίς κανονικοποίηση (στανταρδ γραμμική παλινδρόμηση) (No regularization (standard linear regression))
+        - Μικρό α (0.001, 0.01): Ελαφριά κανονικοποίηση (Small α (0.001, 0.01): Light regularization)
+        - Μέτριο α (0.1, 1.0): Μέτρια κανονικοποίηση (Medium α (0.1, 1.0): Moderate regularization)
+        - Μεγάλο α (10, 100): Ισχυρή κανονικοποίηση (συντελεστές → 0) (Large α (10, 100): Heavy regularization (coefficients → 0))
 
-    Πλεονεκτήματα / Benefits:
-        - Αποτρέπει το overfitting με πολλά χαρακτηριστικά / Prevents overfitting with many features
-        - Σταθερό όταν τα χαρακτηριστικά είναι συσχετισμένα / Stable when features are correlated
-        - Πάντα έχει μοναδική λύση / Always has a unique solution
-        - Υπολογιστικά αποδοτικό / Computationally efficient
+    Πλεονεκτήματα (Benefits):
+        - Αποτρέπει το overfitting με πολλά χαρακτηριστικά (Prevents overfitting with many features)
+        - Σταθερό όταν τα χαρακτηριστικά είναι συσχετισμένα (Stable when features are correlated)
+        - Πάντα έχει μοναδική λύση (Always has a unique solution)
+        - Υπολογιστικά αποδοτικό (Computationally efficient)
 
-    Περίπτωση Χρήσης / Use Case:
-        - Όταν όλα τα χαρακτηριστικά μπορεί να είναι σχετικά / When all features might be relevant
+    Περίπτωση Χρήσης (Use Case):
+        - Όταν όλα τα χαρακτηριστικά μπορεί να είναι σχετικά (When all features might be relevant)
         - Όταν τα χαρακτηριστικά είναι πολύ συσχετισμένα (π.χ. τιμές με υστέρηση)
-          When features are highly correlated (e.g., lagged prices)
-        - Όταν θέλετε σταθερές εκτιμήσεις συντελεστών / When you want stable coefficient estimates
+          (When features are highly correlated (e.g., lagged prices))
+        - Όταν θέλετε σταθερές εκτιμήσεις συντελεστών (When you want stable coefficient estimates)
     """
     best_alpha = None
     best_val_rmse = float("inf")
     best_model = None
     results = []
 
-    print("\n  Δοκιμή Ridge (L2) παλινδρόμησης / Testing Ridge (L2) regression:")
-    print(f"    Τιμές Alpha / Alpha values: {alpha_values}")
+    print("\n  Δοκιμή Ridge (L2) παλινδρόμησης (Testing Ridge (L2) regression):")
+    print(f"    Τιμές Alpha (Alpha values): {alpha_values}")
 
     for alpha in alpha_values:
         model = Ridge(alpha=alpha, max_iter=10000)
@@ -234,7 +233,7 @@ def train_ridge_regression(X_train, y_train, X_val, y_val, alpha_values):
             best_model = model
 
     print(
-        f"    Καλύτερο alpha / Best alpha: {best_alpha} (Επικύρωση RMSE / Validation RMSE: ${best_val_rmse:.2f})"
+        f"    Καλύτερο alpha (Best alpha): {best_alpha} (Επικύρωση RMSE (Validation RMSE): ${best_val_rmse:.2f})"
     )
 
     return {
@@ -250,73 +249,73 @@ def train_lasso_regression(X_train, y_train, X_val, y_val, alpha_values):
     Εκπαιδεύει Lasso παλινδρόμηση με L1 κανονικοποίηση.
     Trains Lasso regression with L1 regularization.
 
-    Παράμετροι / Args:
-        X_train, y_train: Δεδομένα εκπαίδευσης / Training data
-        X_val, y_val: Δεδομένα επικύρωσης / Validation data
-        alpha_values: Λίστα ισχύος κανονικοποίησης προς δοκιμή / List of regularization strengths to test
+    Παράμετροι (Args):
+        X_train, y_train: Δεδομένα εκπαίδευσης (Training data)
+        X_val, y_val: Δεδομένα επικύρωσης (Validation data)
+        alpha_values: Λίστα ισχύος κανονικοποίησης προς δοκιμή (List of regularization strengths to test)
 
-    Επιστρέφει / Returns:
-        dict: Καλύτερο μοντέλο και αποτελέσματα / Best model and results
+    Επιστρέφει (Returns):
+        dict: Καλύτερο μοντέλο και αποτελέσματα (Best model and results)
 
-    Lasso Παλινδρόμηση (L1 Κανονικοποίηση) / Lasso Regression (L1 Regularization):
+    Lasso Παλινδρόμηση (L1 Κανονικοποίηση) (Lasso Regression (L1 Regularization)):
 
-        Αντικείμενο / Objective: Minimize Σ(y - ŷ)² + α·Σ|β|
+        Αντικείμενο (Objective): Minimize Σ(y - ŷ)² + α·Σ|β|
                    ├──────┬──────┘   └──┬──┘
-                   Συνάρτηση σφάλματος / Loss function    L1 ποινή / penalty
+                   Συνάρτηση σφάλματος (Loss function)    L1 ποινή (penalty)
 
-        Όπου / Where:
-        - α (alpha): Ισχύς κανονικοποίησης / Regularization strength
-        - β: Συντελεστές μοντέλου / Model coefficients
-        - Σ|β|: Άθροισμα απόλυτων τιμών συντελεστών / Sum of absolute values of coefficients
+        Όπου (Where):
+        - α (alpha): Ισχύς κανονικοποίησης (Regularization strength)
+        - β: Συντελεστές μοντέλου (Model coefficients)
+        - Σ|β|: Άθροισμα απόλυτων τιμών συντελεστών (Sum of absolute values of coefficients)
 
-    Πώς λειτουργεί το L1 / How L1 Works:
-        - Ποινή στην απόλυτη τιμή των συντελεστών / Penalizes absolute value of coefficients
-        - Εξαναγκάζει μερικούς συντελεστές να γίνουν ΑΚΡΙΒΩΣ μηδέν / Forces some coefficients to EXACTLY zero
-        - Εκτελεί αυτόματη επιλογή χαρακτηριστικών / Performs automatic feature selection
+    Πώς λειτουργεί το L1 (How L1 Works):
+        - Ποινή στην απόλυτη τιμή των συντελεστών (Penalizes absolute value of coefficients)
+        - Εξαναγκάζει μερικούς συντελεστές να γίνουν ΑΚΡΙΒΩΣ μηδέν (Forces some coefficients to EXACTLY zero)
+        - Εκτελεί αυτόματη επιλογή χαρακτηριστικών (Performs automatic feature selection)
         - Δημιουργεί αραιά μοντέλα (λίγοι μη μηδενικοί συντελεστές)
-          Creates sparse models (few non-zero coefficients)
-        - Λιγότερο σταθερό από το L2 με συσχετισμένα χαρακτηριστικά / Less stable than L2 with correlated features
+          (Creates sparse models (few non-zero coefficients))
+        - Λιγότερο σταθερό από το L2 με συσχετισμένα χαρακτηριστικά (Less stable than L2 with correlated features)
 
     Παράμετρος Alpha:
-        - α = 0: Χωρίς κανονικοποίηση (μπορεί να μη συγκλίνει) / No regularization (may not converge)
-        - Μικρό α (0.001, 0.01): Ελαφριά επιλογή / Small α (0.001, 0.01): Light selection
-        - Μέτριο α (0.1, 1.0): Μέτρια επιλογή / Medium α (0.1, 1.0): Moderate selection
+        - α = 0: Χωρίς κανονικοποίηση (μπορεί να μη συγκλίνει) (No regularization (may not converge))
+        - Μικρό α (0.001, 0.01): Ελαφριά επιλογή (Small α (0.001, 0.01): Light selection)
+        - Μέτριο α (0.1, 1.0): Μέτρια επιλογή (Medium α (0.1, 1.0): Moderate selection)
         - Μεγάλο α (10, 100): Ισχυρή επιλογή (οι περισσότεροι συντελεστές → 0)
-          Large α (10, 100): Heavy selection (most coefficients → 0)
+          (Large α (10, 100): Heavy selection (most coefficients → 0))
 
-    Πλεονεκτήματα / Benefits:
-        - Αυτόματη επιλογή χαρακτηριστικών / Automatic feature selection
+    Πλεονεκτήματα (Benefits):
+        - Αυτόματη επιλογή χαρακτηριστικών (Automatic feature selection)
         - Ερμηνεύσιμα μοντέλα (μόνο σημαντικά χαρακτηριστικά μένουν)
-          Interpretable models (only important features remain)
-        - Διαχειρίζεται δεδομένα υψηλής διάστασης / Handles high-dimensional data
-        - Καλό όταν πολλά χαρακτηριστικά είναι ασύμφορα / Good when many features are irrelevant
+          (Interpretable models (only important features remain))
+        - Διαχειρίζεται δεδομένα υψηλής διάστασης (Handles high-dimensional data)
+        - Καλό όταν πολλά χαρακτηριστικά είναι ασύμφορα (Good when many features are irrelevant)
 
-    Μειονεκτήματα / Drawbacks:
+    Μειονεκτήματα (Drawbacks):
         - Μπορεί να επιλέξει τυχαία ένα από συσχετισμένα χαρακτηριστικά
-          Can arbitrarily select one among correlated features
-        - Λιγότερο σταθερό από το Ridge / Less stable than Ridge
-        - Μπορεί να απαιτεί περισσότερες επαναλήψεις για να συγκλίνει / May require more iterations to converge
+          (Can arbitrarily select one among correlated features)
+        - Λιγότερο σταθερό από το Ridge (Less stable than Ridge)
+        - Μπορεί να απαιτεί περισσότερες επαναλήψεις για να συγκλίνει (May require more iterations to converge)
 
-    Περίπτωση Χρήσης / Use Case:
-        - Όταν υποπτεύεστε ότι πολλά χαρακτηριστικά είναι ασύμφορα / When you suspect many features are irrelevant
-        - Όταν θέλετε ένα ερμηνεύσιμο μοντέλο / When you want an interpretable model
-        - Όταν χρειάζεστε επιλογή χαρακτηριστικών / When you need feature selection
+    Περίπτωση Χρήσης (Use Case):
+        - Όταν υποπτεύεστε ότι πολλά χαρακτηριστικά είναι ασύμφορα (When you suspect many features are irrelevant)
+        - Όταν θέλετε ένα ερμηνεύσιμο μοντέλο (When you want an interpretable model)
+        - Όταν χρειάζεστε επιλογή χαρακτηριστικών (When you need feature selection)
         - Με πολυωνυμικά χαρακτηριστικά (επιλέγει σημαντικές αλληλεπιδράσεις)
-          With polynomial features (selects important interactions)
+          (With polynomial features (selects important interactions))
 
-    Σύγκριση με Ridge / Comparison with Ridge:
-        - Lasso: Αραιό, επιλογή χαρακτηριστικών, λιγότερο σταθερό / Sparse, feature selection, less stable
-        - Ridge: Πυκνό, όχι επιλογή, πιο σταθερό / Dense, no selection, more stable
-        - Lasso καλύτερο για επιλογή χαρακτηριστικών / Lasso better for feature selection
-        - Ridge καλύτερο όταν όλα τα χαρακτηριστικά μετράνε / Ridge better when all features matter
+    Σύγκριση με Ridge (Comparison with Ridge):
+        - Lasso: Αραιό, επιλογή χαρακτηριστικών, λιγότερο σταθερό (Sparse, feature selection, less stable)
+        - Ridge: Πυκνό, όχι επιλογή, πιο σταθερό (Dense, no selection, more stable)
+        - Lasso καλύτερο για επιλογή χαρακτηριστικών (Lasso better for feature selection)
+        - Ridge καλύτερο όταν όλα τα χαρακτηριστικά μετράνε (Ridge better when all features matter)
     """
     best_alpha = None
     best_val_rmse = float("inf")
     best_model = None
     results = []
 
-    print("\n  Δοκιμή Lasso (L1) παλινδρόμησης / Testing Lasso (L1) regression:")
-    print(f"    Τιμές Alpha / Alpha values: {alpha_values}")
+    print("\n  Δοκιμή Lasso (L1) παλινδρόμησης (Testing Lasso (L1) regression):")
+    print(f"    Τιμές Alpha (Alpha values): {alpha_values}")
 
     for alpha in alpha_values:
         model = Lasso(alpha=alpha, max_iter=10000, tol=1e-4)
@@ -351,11 +350,11 @@ def train_lasso_regression(X_train, y_train, X_val, y_val, alpha_values):
             best_model = model
 
     print(
-        f"    Καλύτερο alpha / Best alpha: {best_alpha} (Επικύρωση RMSE / Validation RMSE: ${best_val_rmse:.2f})"
+        f"    Καλύτερο alpha (Best alpha): {best_alpha} (Επικύρωση RMSE (Validation RMSE): ${best_val_rmse:.2f})"
     )
     if best_model is not None:
         print(
-            f"    Μη μηδενικοί συντελεστές / Non-zero coefficients: {np.sum(np.abs(best_model.coef_) > 1e-6)} / {len(best_model.coef_)}"
+            f"    Μη μηδενικοί συντελεστές (Non-zero coefficients): {np.sum(np.abs(best_model.coef_) > 1e-6)} out of {len(best_model.coef_)}"
         )
 
     return {
@@ -371,13 +370,13 @@ def compare_models(baseline_results, poly_results, degree):
     Δημιουργεί πίνακα σύγκρισης όλων των μοντέλων.
     Creates comparison table of all models.
 
-    Παράμετροι / Args:
-        baseline_results: Αποτελέσματα baseline γραμμικής παλινδρόμησης / Baseline linear regression results
-        poly_results: Λίστα αποτελεσμάτων πολυωνυμικής παλινδρόμησης / List of polynomial regression results
-        degree: Βαθμός πολυωνύμου που χρησιμοποιήθηκε / Polynomial degree used
+    Παράμετροι (Args):
+        baseline_results: Αποτελέσματα baseline γραμμικής παλινδρόμησης (Baseline linear regression results)
+        poly_results: Λίστα αποτελεσμάτων πολυωνυμικής παλινδρόμησης (List of polynomial regression results)
+        degree: Βαθμός πολυωνύμου που χρησιμοποιήθηκε (Polynomial degree used)
 
-    Επιστρέφει / Returns:
-        pd.DataFrame: Πίνακας σύγκρισης / Comparison table
+    Επιστρέφει (Returns):
+        pd.DataFrame: Πίνακας σύγκρισης (Comparison table)
     """
     comparison = []
 
@@ -428,9 +427,9 @@ def display_best_polynomial_model(result, feature_names):
     Εμφανίζει παραμέτρους και ανάλυση του καλύτερου πολυωνυμικού μοντέλου.
     Displays parameters and analysis of best polynomial model.
 
-    Παράμετροι / Args:
-        result: Λεξικό αποτελεσμάτων μοντέλου / Model results dictionary
-        feature_names: Ονόματα πολυωνυμικών χαρακτηριστικών / Names of polynomial features
+    Παράμετροι (Args):
+        result: Λεξικό αποτελεσμάτων μοντέλου (Model results dictionary)
+        feature_names: Ονόματα πολυωνυμικών χαρακτηριστικών (Names of polynomial features)
     """
     model = result["best_model"]
     model_type = result["model_type"]
@@ -438,22 +437,22 @@ def display_best_polynomial_model(result, feature_names):
 
     print(f"\n{'='*80}")
     print(
-        f"ΚΑΛΥΤΕΡΕΣ ΠΑΡΑΜΕΤΡΟΙ {model_type.upper()} ΜΟΝΤΕΛΟΥ / BEST {model_type.upper()} MODEL PARAMETERS"
+        f"ΚΑΛΥΤΕΡΕΣ ΠΑΡΑΜΕΤΡΟΙ {model_type.upper()} ΜΟΝΤΕΛΟΥ (BEST {model_type.upper()} MODEL PARAMETERS)"
     )
     print(f"{'='*80}")
     print(
-        f"Κανονικοποίηση / Regularization: {model_type} ({'L2' if model_type == 'Ridge' else 'L1'})"
+        f"Κανονικοποίηση (Regularization): {model_type} ({'L2' if model_type == 'Ridge' else 'L1'})"
     )
     print(f"Alpha (λ): {alpha}")
-    print(f"Τομή / Intercept: ${model.intercept_:.2f}")
-    print(f"Συνολικά Χαρακτηριστικά / Total Features: {len(model.coef_)}")
+    print(f"Τομή (Intercept): ${model.intercept_:.2f}")
+    print(f"Συνολικά Χαρακτηριστικά (Total Features): {len(model.coef_)}")
 
     # Coefficient analysis
     nonzero_mask = np.abs(model.coef_) > 1e-6
     n_nonzero = np.sum(nonzero_mask)
 
     print(
-        f"Μη μηδενικοί Συντελεστές / Non-zero Coefficients: {n_nonzero} ({100*n_nonzero/len(model.coef_):.1f}%)"
+        f"Μη μηδενικοί Συντελεστές (Non-zero Coefficients): {n_nonzero} ({100*n_nonzero/len(model.coef_):.1f}%)"
     )
 
     # Show top coefficients
@@ -467,9 +466,9 @@ def display_best_polynomial_model(result, feature_names):
     coef_df = coef_df[coef_df["abs_coefficient"] > 1e-6]  # Only non-zero
     coef_df = coef_df.sort_values("abs_coefficient", ascending=False)
 
-    print(f"\nΤοπ 15 Πιο Σημαντικά Χαρακτηριστικά / Top 15 Most Important Features:")
+    print(f"\nΤοπ 15 Πιο Σημαντικά Χαρακτηριστικά (Top 15 Most Important Features):")
     print("-" * 80)
-    print(f"{'Χαρακτηριστικό / Feature':<40} {'Συντελεστής / Coefficient':>20}")
+    print(f"{'Χαρακτηριστικό (Feature)':<40} {'Συντελεστής (Coefficient)':>20}")
     print("-" * 80)
 
     for i, (idx, row) in enumerate(coef_df.head(15).iterrows(), 1):
@@ -483,14 +482,14 @@ def display_best_polynomial_model(result, feature_names):
     # Feature type analysis for polynomial features
     if result["model_type"] == "Lasso":
         print(
-            f"\nΑνάλυση Επιλογής Χαρακτηριστικών (Lasso) / Feature Selection Analysis (Lasso):"
+            f"\nΑνάλυση Επιλογής Χαρακτηριστικών (Lasso) (Feature Selection Analysis (Lasso)):"
         )
         print(
-            f"  Επιλεγμένα χαρακτηριστικά / Selected features: {n_nonzero} από / out of {len(model.coef_)}"
+            f"  Επιλεγμένα χαρακτηριστικά (Selected features): {n_nonzero} από (out of) {len(model.coef_)}"
         )
-        print(f"  Αραίωση / Sparsity: {100*(1 - n_nonzero/len(model.coef_)):.1f}%")
+        print(f"  Αραίωση (Sparsity): {100*(1 - n_nonzero/len(model.coef_)):.1f}%")
         print(
-            f"  → Το μοντέλο χρησιμοποιεί μόνο / Model uses only {n_nonzero} χαρακτηριστικά για πρόβλεψη / features for prediction"
+            f"  → Το μοντέλο χρησιμοποιεί μόνο (Model uses only) {n_nonzero} χαρακτηριστικά για πρόβλεψη (features for prediction)"
         )
 
 
@@ -499,14 +498,14 @@ def create_regularization_path_plot(poly_results, output_dir="results"):
     Οπτικοποιεί πώς η απόδοση αλλάζει με την ισχύ κανονικοποίησης.
     Visualizes how performance changes with regularization strength.
 
-    Παράμετροι / Args:
-        poly_results: Λίστα αποτελεσμάτων πολυωνυμικής παλινδρόμησης / List of polynomial regression results
-        output_dir: Κατάλογος εξόδου / Output directory
+    Παράμετροι (Args):
+        poly_results: Λίστα αποτελεσμάτων πολυωνυμικής παλινδρόμησης (List of polynomial regression results)
+        output_dir: Κατάλογος εξόδου (Output directory)
 
-    Εμφανίζει / Shows:
-        - Επικύρωση RMSE vs alpha για Ridge και Lasso / Validation RMSE vs alpha for Ridge and Lasso
-        - Βοηθά να κατανοήσουμε την επίδραση της κανονικοποίησης / Helps understand regularization impact
-        - Προσδιορίζει βέλτιστες τιμές alpha / Identifies optimal alpha values
+    Εμφανίζει (Shows):
+        - Επικύρωση RMSE vs alpha για Ridge και Lasso (Validation RMSE vs alpha for Ridge and Lasso)
+        - Βοηθά να κατανοήσουμε την επίδραση της κανονικοποίησης (Helps understand regularization impact)
+        - Προσδιορίζει βέλτιστες τιμές alpha (Identifies optimal alpha values)
     """
     fig, axes = plt.subplots(1, 2, figsize=(14, 5))
 
@@ -561,7 +560,7 @@ def create_regularization_path_plot(poly_results, output_dir="results"):
     plot_path = os.path.join(output_dir, "polynomial_regularization_paths.png")
     plt.savefig(plot_path, dpi=150, bbox_inches="tight")
     print(
-        f"✓ Αποθηκεύτηκε γράφημα διαδρομής κανονικοποίησης / Saved regularization path plot: {plot_path}"
+        f"✓ Αποθηκεύτηκε γράφημα διαδρομής κανονικοποίησης (Saved regularization path plot): {plot_path}"
     )
     plt.close()
 
@@ -571,17 +570,17 @@ def save_results(comparison_df, poly_results, output_dir="results"):
     Αποθηκεύει αποτελέσματα πολυωνυμικής παλινδρόμησης.
     Saves polynomial regression results.
 
-    Παράμετροι / Args:
-        comparison_df: DataFrame σύγκρισης / Comparison DataFrame
-        poly_results: Αποτελέσματα πολυωνυμικού μοντέλου / Polynomial model results
-        output_dir: Κατάλογος εξόδου / Output directory
+    Παράμετροι (Args):
+        comparison_df: DataFrame σύγκρισης (Comparison DataFrame)
+        poly_results: Αποτελέσματα πολυωνυμικού μοντέλου (Polynomial model results)
+        output_dir: Κατάλογος εξόδου (Output directory)
     """
     os.makedirs(output_dir, exist_ok=True)
 
     # Save comparison table
     csv_path = os.path.join(output_dir, "polynomial_regression_comparison.csv")
     comparison_df.to_csv(csv_path, index=False)
-    print(f"✓ Αποθηκεύτηκε πίνακας σύγκρισης / Saved comparison table: {csv_path}")
+    print(f"✓ Αποθηκεύτηκε πίνακας σύγκρισης (Saved comparison table): {csv_path}")
 
     # Save best models
     models_dir = os.path.join(output_dir, "../models")
@@ -595,7 +594,7 @@ def save_results(comparison_df, poly_results, output_dir="results"):
         with open(model_path, "wb") as f:
             pickle.dump(result, f)
         print(
-            f"✓ Αποθηκεύτηκε {model_type} μοντέλο / Saved {model_type} model: {model_path}"
+            f"✓ Αποθηκεύτηκε {model_type} μοντέλο (Saved {model_type} model): {model_path}"
         )
 
 
@@ -604,21 +603,21 @@ def main():
     Κύρια συνάρτηση εκτέλεσης για πολυωνυμική παλινδρόμηση με κανονικοποίηση.
     Main execution function for polynomial regression with regularization.
 
-    Στρατηγική / Strategy:
+    Στρατηγική (Strategy):
         1. Δοκιμή ΌΛΩΝ των 16 baseline ρυθμίσεων (όχι μόνο την καλύτερη)
-           Test ALL 16 baseline configurations (not just best)
+           (Test ALL 16 baseline configurations (not just best))
         2. Εφαρμόζει πολυωνυμικά χαρακτηριστικά βαθμού 2 σε κάθε ρύθμιση
-           Apply polynomial degree 2 features to each
+           (Apply polynomial degree 2 features to each)
         3. Grid search Ridge και Lasso για κάθε ρύθμιση
-           Grid search Ridge and Lasso for each configuration
+           (Grid search Ridge and Lasso for each configuration)
         4. Αποθηκεύει αποτελέσματα για όλες τις ρυθμίσεις
-           Save results for all configurations
+           (Save results for all configurations)
         5. Συγκρίνει και προσδιορίζει το καλύτερο συνολικά
-           Compare and identify best overall
+           (Compare and identify best overall)
     """
     print("=" * 80)
     print("ΠΡΟΒΛΕΨΗ ΤΙΜΗΣ ΜΕΤΟΧΗΣ NFLX - ΠΟΛΥΩΝΥΜΙΚΗ ΠΑΛΙΝΔΡΟΜΗΣΗ (ΕΡΓΑΣΙΑ Β)")
-    print("NFLX STOCK PRICE PREDICTION - POLYNOMIAL REGRESSION (TASK B)")
+    print("(NFLX STOCK PRICE PREDICTION - POLYNOMIAL REGRESSION (TASK B))")
     print("=" * 80)
     print()
 
@@ -635,7 +634,7 @@ def main():
     ]
 
     print(
-        f"Βρέθηκαν / Found {len(feature_files)} ρυθμίσεις χαρακτηριστικών / feature configurations"
+        f"Βρέθηκαν (Found) {len(feature_files)} ρυθμίσεις χαρακτηριστικών (feature configurations)"
     )
     print()
 
@@ -652,22 +651,22 @@ def main():
         n_lags = int(parts[1].replace("lags", ""))
 
         print("=" * 80)
-        print(f"Επεξεργασία / Processing: {smoothing}, {n_lags} υστερήσεις / lags")
+        print(f"Επεξεργασία (Processing): {smoothing}, {n_lags} υστερήσεις (lags)")
         print("=" * 80)
 
         # Load feature set
         features_path = os.path.join(features_dir, feature_file)
         data = load_feature_set(features_path)
-        print(f"✓ Φορτώθηκε / Loaded: {features_path}")
-        print(f"  Δείγματα εκπαίδευσης / Training samples: {len(data['y_train'])}")
-        print(f"  Δείγματα επικύρωσης / Validation samples: {len(data['y_val'])}")
+        print(f"✓ Φορτώθηκε (Loaded): {features_path}")
+        print(f"  Δείγματα εκπαίδευσης (Training samples): {len(data['y_train'])}")
+        print(f"  Δείγματα επικύρωσης (Validation samples): {len(data['y_val'])}")
         print(
-            f"  Αρχικά χαρακτηριστικά / Original features: {data['X_train'].shape[1]}"
+            f"  Αρχικά χαρακτηριστικά (Original features): {data['X_train'].shape[1]}"
         )
 
         # Create polynomial features
         print(
-            f"  Δημιουργία πολυωνυμικών χαρακτηριστικών / Creating polynomial features (βαθμός / degree={polynomial_degree})..."
+            f"  Δημιουργία πολυωνυμικών χαρακτηριστικών (Creating polynomial features) (βαθμός (degree)={polynomial_degree})..."
         )
         X_train_poly, X_val_poly, poly_transformer, poly_feature_names = (
             create_polynomial_features(
@@ -677,7 +676,7 @@ def main():
 
         # Train Ridge regression
         print(
-            "  Εκπαίδευση Ridge παλινδρόμησης (L2) / Training Ridge regression (L2)..."
+            "  Εκπαίδευση Ridge παλινδρόμησης (L2) (Training Ridge regression (L2))..."
         )
         ridge_results = train_ridge_regression(
             X_train_poly, data["y_train"], X_val_poly, data["y_val"], alpha_values
@@ -685,7 +684,7 @@ def main():
 
         # Train Lasso regression
         print(
-            "  Εκπαίδευση Lasso παλινδρόμησης (L1) / Training Lasso regression (L1)..."
+            "  Εκπαίδευση Lasso παλινδρόμησης (L1) (Training Lasso regression (L1))..."
         )
         lasso_results = train_lasso_regression(
             X_train_poly, data["y_train"], X_val_poly, data["y_val"], alpha_values
@@ -733,13 +732,13 @@ def main():
         }
 
         print(
-            f"✓ Η ρύθμιση ολοκληρώθηκε / Configuration complete: {smoothing}, {n_lags} υστερήσεις / lags"
+            f"✓ Η ρύθμιση ολοκληρώθηκε (Configuration complete): {smoothing}, {n_lags} υστερήσεις (lags)"
         )
         print(
-            f"  Καλύτερο Ridge alpha / Best Ridge alpha: {ridge_results['best_alpha']} (Επικύρωση RMSE / Val RMSE: ${ridge_best['val_rmse']:.2f})"
+            f"  Καλύτερο Ridge alpha (Best Ridge alpha): {ridge_results['best_alpha']} (Επικύρωση RMSE (Val RMSE): ${ridge_best['val_rmse']:.2f})"
         )
         print(
-            f"  Καλύτερο Lasso alpha / Best Lasso alpha: {lasso_results['best_alpha']} (Επικύρωση RMSE / Val RMSE: ${lasso_best['val_rmse']:.2f})"
+            f"  Καλύτερο Lasso alpha (Best Lasso alpha): {lasso_results['best_alpha']} (Επικύρωση RMSE (Val RMSE): ${lasso_best['val_rmse']:.2f})"
         )
         print()
 
@@ -750,15 +749,15 @@ def main():
     # Display summary
     print("=" * 80)
     print("ΣΥΝΟΨΗ ΟΛΩΝ ΤΩΝ ΡΥΘΜΙΣΕΩΝ - ΠΟΛΥΩΝΥΜΙΚΗ ΠΑΛΙΝΔΡΟΜΗΣΗ")
-    print("ALL CONFIGURATIONS SUMMARY - POLYNOMIAL REGRESSION")
+    print("(ALL CONFIGURATIONS SUMMARY - POLYNOMIAL REGRESSION)")
     print("=" * 80)
-    print("\nΤοπ 10 Μοντέλα βάσει Επικύρωσης RMSE / Top 10 Models by Validation RMSE:")
+    print("\nΤοπ 10 Μοντέλα βάσει Επικύρωσης RMSE (Top 10 Models by Validation RMSE):")
     print(results_df.head(10).to_string(index=False))
     print()
 
     # Save results
     print("=" * 80)
-    print("ΑΠΟΘΗΚΕΥΣΗ ΑΠΟΤΕΛΕΣΜΑΤΩΝ / SAVING RESULTS")
+    print("ΑΠΟΘΗΚΕΥΣΗ ΑΠΟΤΕΛΕΣΜΑΤΩΝ (SAVING RESULTS)")
     print("=" * 80)
 
     os.makedirs("results", exist_ok=True)
@@ -767,24 +766,24 @@ def main():
     # Save all results table
     csv_path = "results/polynomial_regression_all_models_results.csv"
     results_df.to_csv(csv_path, index=False)
-    print(f"✓ Αποθηκεύτηκε πίνακας αποτελεσμάτων / Saved results table: {csv_path}")
+    print(f"✓ Αποθηκεύτηκε πίνακας αποτελεσμάτων (Saved results table): {csv_path}")
 
     # Save all models
     models_path = "models/all_polynomial_models.pkl"
     with open(models_path, "wb") as f:
         pickle.dump(all_poly_models, f)
-    print(f"✓ Αποθηκεύτηκαν όλα τα μοντέλα / Saved all models: {models_path}")
+    print(f"✓ Αποθηκεύτηκαν όλα τα μοντέλα (Saved all models): {models_path}")
 
     # Final summary
     best = results_df.iloc[0]
     print()
     print("=" * 80)
     print(
-        "✓ Η ΑΝΑΛΥΣΗ ΠΟΛΥΩΝΥΜΙΚΗΣ ΠΑΛΙΝΔΡΟΜΗΣΗΣ ΟΛΟΚΛΗΡΩΘΗΚΕ / POLYNOMIAL REGRESSION ANALYSIS COMPLETED"
+        "✓ Η ΑΝΑΛΥΣΗ ΠΟΛΥΩΝΥΜΙΚΗΣ ΠΑΛΙΝΔΡΟΜΗΣΗΣ ΟΛΟΚΛΗΡΩΘΗΚΕ (POLYNOMIAL REGRESSION ANALYSIS COMPLETED)"
     )
     print("=" * 80)
     print(
-        f"\nΔοκιμάστηκαν / Tested {len(feature_files)} ρυθμίσεις / configurations × 2 μέθοδοι / methods = {len(results_df)} μοντέλα / models"
+        f"\nΔοκιμάστηκαν (Tested) {len(feature_files)} ρυθμίσεις (configurations) × 2 μέθοδοι (methods) = {len(results_df)} μοντέλα (models)"
     )
     print(f"\nΚαλύτερο Συνολικό Μοντέλο (Best Overall Model):")
     print(

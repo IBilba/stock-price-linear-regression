@@ -65,7 +65,7 @@ def fetch_stock_data(symbol, api_key):
         dict: JSON απόκριση που περιέχει χρονοσειρές δεδομένων
               JSON response containing time series data
 
-    Σημειώσεις / Notes:
+    Σημειώσεις (Notes):
         - Χρησιμοποιεί TIME_SERIES_DAILY για ημερήσια δεδομένα OHLCV
           Uses TIME_SERIES_DAILY function to get daily OHLCV data
         - outputsize=full ανακτά 20+ χρόνια ιστορικών δεδομένων
@@ -257,7 +257,7 @@ def save_data_versions(monthly_df, output_dir="data"):
         dict: Λεξικό με διαδρομές αποθηκευμένων αρχείων
               (Dictionary with paths to saved files)
 
-    Σημειώσεις / Notes:
+    Σημειώσεις (Notes):
         Αποθηκεύει 4 εκδόσεις για σύγκριση:
         Saves 4 versions to allow comparison:
         1. Ακατέργαστα μηνιαία δεδομένα (χωρίς εξομάλυνση)
