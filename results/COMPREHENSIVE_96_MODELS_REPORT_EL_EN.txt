@@ -1,0 +1,148 @@
+====================================================================================================
+ΣΥΝΟΛΙΚΗ ΑΝΑΦΟΡΑ - 96 ΜΟΝΤΕΛΑ (COMPREHENSIVE REPORT - 96 MODELS)
+NFLX STOCK PRICE PREDICTION - NETFLIX, INC.
+====================================================================================================
+
+Ημερομηνία (Date): 2025-11-21 14:01:18
+Σύνολο Μοντέλων (Total Models): 96
+
+====================================================================================================
+★★★ ΣΥΝΟΛΙΚΑ ΚΑΛΥΤΕΡΟ ΜΟΝΤΕΛΟ (OVERALL BEST MODEL) ★★★
+====================================================================================================
+Κατηγορία (Category): Baseline
+Ρύθμιση (Configuration): sigma3, 12 lags
+Validation RMSE: $0.0616
+Validation R²: 0.999999
+Πρόβλεψη Δεκ 2025 (Dec 2025 Prediction): $1100.97
+Πρόβλεψη Ιαν 2026 (Jan 2026 Prediction): $1108.80
+
+====================================================================================================
+1. BASELINE LINEAR REGRESSION (16 ΜΟΝΤΕΛΑ (16 MODELS))
+====================================================================================================
+
+★ ΚΑΛΥΤΕΡΟ BASELINE (BEST BASELINE):
+  Ρύθμιση (Config): sigma3, 12 lags
+  Validation RMSE: $0.0616
+  Validation R²: 0.999999
+  Πρόβλεψη Δεκ 2025 (Dec 2025 Prediction): $1100.97
+  Πρόβλεψη Ιαν 2026 (Jan 2026 Prediction): $1108.80
+
+Top 5 Baseline Models (Κορυφαία 5 Baseline):
+Smoothing    Lags   Val RMSE        Val R²      
+---------------------------------------------
+sigma3       12     $0.0616         0.999999    
+sigma3       9      $0.0627         0.999999    
+sigma3       6      $0.2670         0.999985    
+sigma2       12     $0.5411         0.999956    
+sigma2       9      $0.9279         0.999871    
+
+====================================================================================================
+2. POLYNOMIAL REGRESSION (32 ΜΟΝΤΕΛΑ (32 MODELS))
+====================================================================================================
+
+★ ΚΑΛΥΤΕΡΟ POLYNOMIAL (BEST POLYNOMIAL):
+  Ρύθμιση (Config): sigma3, 3 lags
+  Τύπος (Type): Ridge
+  Πρόβλεψη Δεκ 2025 (Dec 2025 Prediction): $1098.78
+  Πρόβλεψη Ιαν 2026 (Jan 2026 Prediction): $1103.96
+  Validation RMSE: $3.8710
+  Validation R²: 0.996882
+
+Top 5 Polynomial Models (Κορυφαία 5 Polynomial):
+Smoothing    Lags   Type     Val RMSE        Val R²      
+-----------------------------------------------------
+sigma3       3      Ridge    $3.87           0.996882    
+sigma3       6      Ridge    $4.67           0.995464    
+sigma3       9      Lasso    $8.35           0.985492    
+sigma3       12     Lasso    $9.69           0.980475    
+sigma2       6      Ridge    $9.86           0.985401    
+
+====================================================================================================
+3. DIMENSIONALITY REDUCTION (48 ΜΟΝΤΕΛΑ (48 MODELS))
+====================================================================================================
+
+★ ΚΑΛΥΤΕΡΟ DIMENSIONALITY REDUCTION (BEST DIM-REDUCTION):
+  Ρύθμιση (Config): sigma3, 9 lags
+  Μέθοδος (Method): Forward_Selection
+  Χαρακτηριστικά (Features): 9
+  Πρόβλεψη Δεκ 2025 (Dec 2025 Prediction): $1100.98
+  Πρόβλεψη Ιαν 2026 (Jan 2026 Prediction): $1108.86
+  Validation RMSE: $0.0624
+  Validation R²: 0.999999
+
+Top 5 Dim-Reduction Models (Κορυφαία 5 Dim-Reduction):
+Smoothing    Lags   Method               Features   Val RMSE        Val R²      
+---------------------------------------------------------------------------
+sigma3       9      Forward_Selection    9          $0.0624         0.999999    
+sigma3       12     Forward_Selection    12         $0.0632         0.999999    
+sigma3       6      Forward_Selection    6          $0.2841         0.999983    
+sigma2       12     Forward_Selection    12         $0.5596         0.999953    
+sigma2       9      Forward_Selection    9          $0.9323         0.999869    
+
+====================================================================================================
+4. ΣΥΝΟΛΙΚΗ ΣΥΓΚΡΙΣΗ (OVERALL COMPARISON)
+====================================================================================================
+
+Καλύτερο από κάθε κατηγορία (Best from each category):
+----------------------------------------------------------------------------------------------------
+Baseline:         RMSE = $0.0616, R² = 0.999999
+Polynomial:       RMSE = $3.8710, R² = 0.996882
+Dim-Reduction:    RMSE = $0.0624, R² = 0.999999
+
+====================================================================================================
+ΣΗΜΕΙΩΣΕΙΣ (NOTES)
+====================================================================================================
+
+1. RMSE (Root Mean Square Error): Μέσο τετραγωνικό σφάλμα - χαμηλότερο είναι καλύτερο
+   RMSE (Root Mean Square Error): Lower is better
+
+2. R²: Συντελεστής προσδιορισμού (0-1, όπου 1 = τέλεια προσαρμογή)
+   R²: Coefficient of determination (0-1, where 1 = perfect fit)
+
+3. Smoothing Levels (Επίπεδα Εξομάλυνσης):
+   • raw: Χωρίς εξομάλυνση (No smoothing)
+   • sigma1, sigma2, sigma3: Gaussian filtering με σ=1,2,3 (with σ=1,2,3)
+
+4. Polynomial: Πολυωνυμική παλινδρόμηση βαθμού 2 με L1/L2 κανονικοποίηση
+   Polynomial: Degree-2 polynomial regression with L1/L2 regularization
+
+5. Dimensionality Reduction Methods (Μέθοδοι Μείωσης Διαστάσεων):
+   • PCA: Principal Component Analysis
+   • CFS: Correlation-based Feature Selection
+   • Forward_Selection: Sequential Forward Selection (Wrapper method)
+
+
+1. Πρόβλεψη Ιανουαρίου 2026:
+   January 2026 Prediction:
+   - Χρησιμοποιεί ΚΑΤΑΡΡΑΚΤΩΔΗ προσέγγιση (cascading)
+   - Uses CASCADING approach
+   - Η πρόβλεψη Δεκεμβρίου χρησιμοποιείται ως χαρακτηριστικό
+   - December prediction is used as a feature
+   - Μειωμένη ακρίβεια λόγω πολλαπλασιασμού σφαλμάτων
+   - Reduced accuracy due to error compounding
+
+   ΣΗΜΑΝΤΙΚΟ (IMPORTANT):
+   Αν προστεθούν πραγματικά δεδομένα για Δεκέμβριο 2025:
+   If actual December 2025 data becomes available:
+   • Το script θα τα ανιχνεύσει αυτόματα
+   • The script will automatically detect them
+   • Θα χρησιμοποιηθούν τα πραγματικά δεδομένα αντί της πρόβλεψης
+   • Actual data will be used instead of prediction
+   • Θα αυξηθεί σημαντικά η ακρίβεια της πρόβλεψης Ιανουαρίου
+   • January prediction accuracy will significantly improve
+
+2. Σύγκριση Μοντέλων:
+   Model Comparison:
+   - Όλα τα 16 μοντέλα αξιολογήθηκαν
+   - All 16 models were evaluated
+   - Το καλύτερο επιλέχθηκε με βάση το Validation RMSE
+   - Best selected based on Validation RMSE
+
+3. Προβλέψεις για Πραγματικό Μέλλον:
+   Real Future Predictions:
+   - Αυτές είναι προβλέψεις για πραγματικούς μελλοντικούς μήνες
+   - These are predictions for actual future months
+   - Η επαλήθευση θα είναι δυνατή μόνο μετά τους μήνες αυτούς
+   - Verification possible only after these months pass
+
+================================================================================
