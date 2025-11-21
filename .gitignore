@@ -38,18 +38,20 @@ ENV/
 .ipynb_checkpoints
 *.ipynb_checkpoints/
 
-# Data files
-*.csv
-*.xlsx
-*.xls
-data/
-datasets/
+# Data files (keep processed data)
+# Raw data files if very large
+# data/*.csv  # Uncomment if you want to ignore data CSVs
 
-# Model files
-*.pkl
-*.h5
-*.joblib
-models/
+# Model files (optional: keep if you want to track trained models)
+# Uncomment the lines below if models are too large for git
+# *.pkl
+# *.h5
+# *.joblib
+# models/*.pkl
+
+# Results - Keep important analysis files, ignore temporary outputs
+# results/*.png  # Uncomment to ignore plot images
+# results/*.txt  # Uncomment to ignore text reports
 
 # Environment variables
 .env

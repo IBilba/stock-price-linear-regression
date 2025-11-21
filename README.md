@@ -217,9 +217,9 @@ code nflx_stock_prediction_complete_pipeline.ipynb
 
 **Τι Παράγει / What It Produces:**
 
-- 96 εκπαιδευμένα μοντέλα στο `models/` / 96 trained models in `models/`
+- 96 εκπαιδευμένα μοντέλα στο [`models/`](models/) / 96 trained models in [`models/`](models/)
 - Προβλέψεις για Δεκέμβριο 2025 & Ιανουάριο 2026 / Predictions for December 2025 & January 2026
-- Αναλυτικές αναφορές στο `results/` / Detailed reports in `results/`
+- Αναλυτικές αναφορές στο [`results/`](results/) / Detailed reports in [`results/`](results/)
 - 20+ απεικονίσεις ενσωματωμένες στο notebook / 20+ visualizations embedded in notebook
 
 ---
@@ -268,7 +268,7 @@ Each script can be run independently after previous steps are completed.
 
 **Τελικά Αποτελέσματα / Final Results:**
 
-- 📊 **96 Μοντέλα / 96 Models**: Αποθηκευμένα σε `models/` / Saved in `models/`
+- 📊 **96 Μοντέλα / 96 Models**: Αποθηκευμένα σε [`models/`](models/) / Saved in [`models/`](models/)
 - 📈 **Προβλέψεις / Predictions**: December 2025: **\$1,100.97** | January 2026: **\$1,108.80**
 - 📄 **Αναφορές / Reports**:
   - [COMPLETE_96_MODELS_RANKING.csv](results/COMPLETE_96_MODELS_RANKING.csv)
@@ -296,9 +296,9 @@ Each script can be run independently after previous steps are completed.
 
 ### Επισκόπηση / Overview
 
-Το **`nflx_stock_prediction_complete_pipeline.ipynb`** είναι ένα ολοκληρωμένο Jupyter Notebook που ενοποιεί όλα τα 6 βήματα της ανάλυσης σε μία διαδραστική διεπαφή.
+Το **[`nflx_stock_prediction_complete_pipeline.ipynb`](nflx_stock_prediction_complete_pipeline.ipynb)** είναι ένα ολοκληρωμένο Jupyter Notebook που ενοποιεί όλα τα 6 βήματα της ανάλυσης σε μία διαδραστική διεπαφή.
 
-The **`nflx_stock_prediction_complete_pipeline.ipynb`** is a comprehensive Jupyter Notebook that unifies all 6 steps of the analysis in an interactive interface.
+The **[`nflx_stock_prediction_complete_pipeline.ipynb`](nflx_stock_prediction_complete_pipeline.ipynb)** is a comprehensive Jupyter Notebook that unifies all 6 steps of the analysis in an interactive interface.
 
 ### Δομή Notebook / Notebook Structure
 
@@ -335,8 +335,8 @@ The **`nflx_stock_prediction_complete_pipeline.ipynb`** is a comprehensive Jupyt
   - 6-panel performance comparison
   - Actual vs Predicted για καλύτερο μοντέλο / for best model
 - **Αποθήκευση / Saved**:
-  - `all_baseline_models.pkl` (16 models)
-  - `best_baseline_model.pkl`
+  - [`all_baseline_models.pkl`](models/all_baseline_models.pkl) (16 models)
+  - [`best_baseline_model.pkl`](models/best_baseline_model.pkl)
 
 #### Βήμα 5: Polynomial Regression (Εργασία Β / Task B)
 
@@ -352,8 +352,8 @@ The **`nflx_stock_prediction_complete_pipeline.ipynb`** is a comprehensive Jupyt
   - Ridge vs Lasso comparison (6 panels)
   - Regularization path για άλλα μοντέλα / for top models
 - **Αποθήκευση / Saved**:
-  - `all_polynomial_models.pkl` (32 models)
-  - `best_polynomial_model.pkl`
+  - [`all_polynomial_models.pkl`](models/all_polynomial_models.pkl) (32 models)
+  - [`best_polynomial_model.pkl`](models/best_polynomial_model.pkl)
 
 #### Βήμα 6: Dimensionality Reduction (Εργασία Γ / Task C)
 
@@ -371,8 +371,8 @@ The **`nflx_stock_prediction_complete_pipeline.ipynb`** is a comprehensive Jupyt
   - 4-panel comparison (PCA vs CFS vs SFS)
   - Feature reduction analysis
 - **Αποθήκευση / Saved**:
-  - `all_dimensionality_reduction_models.pkl` (48 models)
-  - `best_dimred_model.pkl`
+  - [`all_dimensionality_reduction_models.pkl`](models/all_dimensionality_reduction_models.pkl) (48 models)
+  - [`best_dimred_model.pkl`](models/best_dimred_model.pkl)
 
 #### Βήμα 7: Προβλέψεις Μελλοντικών Τιμών / Step 7: Future Predictions (Εργασία Δ / Task D)
 
@@ -406,9 +406,9 @@ The **`nflx_stock_prediction_complete_pipeline.ipynb`** is a comprehensive Jupyt
   - Best model highlighted σε όλα τα plots / in all plots
 
 - **Αποθήκευση / Saved**:
-  - `baseline_predictions_dec_jan_2025_2026.csv`
-  - `FINAL_PREDICTION_REPORT.txt`
-  - `future_predictions_visualization.png`
+  - [`baseline_predictions_dec_jan_2025_2026.csv`](results/baseline_predictions_dec_jan_2025_2026.csv)
+  - [`FINAL_PREDICTION_REPORT.txt`](results/FINAL_PREDICTION_REPORT.txt)
+  - [`future_predictions_visualization.png`](results/future_predictions_visualization.png)
 
 #### Βήμα 8: Συνολική Σύνοψη / Step 8: Overall Summary
 
@@ -445,6 +445,7 @@ The **`nflx_stock_prediction_complete_pipeline.ipynb`** is a comprehensive Jupyt
 - **Συνολικοί Μήνες / Total Months**: 283
 - **Smoothing**: Gaussian filter (σ = 0, 1, 2, 3)
 - **Μετρικές / Metrics**: Close price & Volume
+- **Script**: [`step1_data_acquisition.py`](step1_data_acquisition.py)
 
 ### 2. Δημιουργία Χαρακτηριστικών / Feature Engineering
 
@@ -454,6 +455,7 @@ The **`nflx_stock_prediction_complete_pipeline.ipynb`** is a comprehensive Jupyt
   - Εκπαίδευση / Training: < 2025 (260-269 δείγματα / samples)
   - Επικύρωση / Validation: 2025 (11 δείγματα / samples)
 - **Κανονικοποίηση / Normalization**: StandardScaler (fitted on training data only)
+- **Script**: [`step2_feature_engineering.py`](step2_feature_engineering.py)
 
 ### 3. Baseline Linear Regression (16 Μοντέλα / Models)
 
@@ -462,6 +464,7 @@ The **`nflx_stock_prediction_complete_pipeline.ipynb`** is a comprehensive Jupyt
 - 4 smoothing levels (raw, sigma1, sigma2, sigma3)
 - 4 lag windows (3, 6, 9, 12 months)
 - **Σύνολο / Total**: 16 configurations
+- **Script**: [`step3_baseline_linear_regression.py`](step3_baseline_linear_regression.py)
 
 **Καλύτερη Ρύθμιση / Best Configuration:**
 
@@ -480,6 +483,7 @@ The **`nflx_stock_prediction_complete_pipeline.ipynb`** is a comprehensive Jupyt
 - Πολυωνυμικά χαρακτηριστικά βαθμού 2 / Degree-2 polynomial features
 - Ridge (L2) και Lasso (L1) regularization
 - Grid search για alpha: [0.001, 0.01, 0.1, 1.0, 10.0]
+- **Script**: [`step4_polynomial_regression_regularization.py`](step4_polynomial_regression_regularization.py)
 
 **Καλύτερο Μοντέλο / Best Model:**
 
@@ -494,6 +498,8 @@ The **`nflx_stock_prediction_complete_pipeline.ipynb`** is a comprehensive Jupyt
 3. **Sequential Forward Selection**: Wrapper method (50% features target)
 
 **Ανάλυση για ΟΛΑ τα 16 configurations / Applied to ALL 16 configurations**
+
+- **Script**: [`step5_dimensionality_reduction.py`](step5_dimensionality_reduction.py)
 
 **Καλύτερο Μοντέλο / Best Model:**
 
@@ -510,6 +516,7 @@ The **`nflx_stock_prediction_complete_pipeline.ipynb`** is a comprehensive Jupyt
 - Καταρρακτώδης πρόβλεψη / Cascading prediction
 - Δεκέμβριος 2025: Χρήση ιστορικών δεδομένων / Using historical data
 - Ιανουάριος 2026: Χρήση πρόβλεψης Δεκεμβρίου ως input / Using December prediction as input
+- **Script**: [`step6_future_predictions.py`](step6_future_predictions.py)
 
 ---
 
@@ -629,22 +636,22 @@ The **`nflx_stock_prediction_complete_pipeline.ipynb`** is a comprehensive Jupyt
 
 ### Δημιουργούμενα Γραφήματα / Generated Plots
 
-1. **Data Smoothing Comparison** (`smoothing_comparison.png`)
+1. **Data Smoothing Comparison** ([`smoothing_comparison.png`](data/smoothing_comparison.png))
 
    - Σύγκριση raw και smoothed data
    - Comparison of raw and smoothed data
 
-2. **Baseline Performance** (`baseline_performance_by_config.png`)
+2. **Baseline Performance** ([`baseline_performance_by_config.png`](results/baseline_performance_by_config.png))
 
    - Απόδοση όλων των 16 baseline configurations
    - Performance of all 16 baseline configurations
 
-3. **Comprehensive Predictions** (`comprehensive_predictions_comparison.png`)
+3. **Comprehensive Predictions** ([`comprehensive_predictions_comparison.png`](results/comprehensive_predictions_comparison.png))
 
    - Σύγκριση προβλέψεων όλων των μοντέλων
    - Comparison of predictions across all models
 
-4. **Best Model Forecast** (`best_model_forecast_with_history.png`)
+4. **Best Model Forecast** ([`best_model_forecast_with_history.png`](results/best_model_forecast_with_history.png))
    - Ιστορικά δεδομένα + προβλέψεις καλύτερου μοντέλου
    - Historical data + best model predictions
 
@@ -689,8 +696,8 @@ This project includes full bilingual support (Greek-English) across all files:
 ✅ **Documentation**: README και τεχνικά έγγραφα σε αμφότερες τις γλώσσες  
 ✅ **Documentation**: README and technical documents in both languages
 
-✅ **Terminology**: Γλωσσάριο ML όρων διαθέσιμο στο `ML_TERMINOLOGY_GLOSSARY_EL_EN.md`  
-✅ **Terminology**: ML terminology glossary available in `ML_TERMINOLOGY_GLOSSARY_EL_EN.md`
+✅ **Terminology**: Γλωσσάριο ML όρων διαθέσιμο στο [`ML_TERMINOLOGY_GLOSSARY_EL_EN.md`](ML_TERMINOLOGY_GLOSSARY_EL_EN.md)  
+✅ **Terminology**: ML terminology glossary available in [`ML_TERMINOLOGY_GLOSSARY_EL_EN.md`](ML_TERMINOLOGY_GLOSSARY_EL_EN.md)
 
 ---
 
@@ -702,7 +709,7 @@ This project includes full bilingual support (Greek-English) across all files:
 2. Εγκαταστήστε dependencies / Install dependencies
 3. Ρυθμίστε Alpha Vantage API key στο `.env` / Configure Alpha Vantage API key in `.env`
 4. Εκτελέστε όλα τα scripts με τη σειρά / Run all scripts in sequence
-5. Ελέγξτε `results/` για αναφορές / Check `results/` for reports
+5. Ελέγξτε [`results/`](results/) για αναφορές / Check [`results/`](results/) for reports
 
 **Σημείωση / Note**: Τα αποτελέσματα μπορεί να διαφέρουν ελαφρώς λόγω ενημερώσεων δεδομένων.  
 Results may vary slightly due to data updates.
@@ -730,8 +737,8 @@ Results may vary slightly due to data updates.
 
 ## ΑΔΕΙΑ / LICENSE
 
-Αυτό το έργο δημιουργήθηκε για εκπαιδευτικούς σκοπούς.  
-This project was created for educational purposes.
+Αυτό το έργο δημιουργήθηκε για εκπαιδευτικούς σκοπούς από τον Βασίλειο Μπίτζα.  
+This project was created for educational purposes from Vasileios Bitzas.
 
 ---
 
