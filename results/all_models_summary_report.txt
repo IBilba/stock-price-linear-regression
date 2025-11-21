@@ -1,0 +1,86 @@
+================================================================================
+ΣΥΓΚΕΝΤΡΩΤΙΚΗ ΑΝΑΦΟΡΑ ΟΛΩΝ ΤΩΝ ΜΟΝΤΕΛΩΝ
+COMPREHENSIVE REPORT OF ALL MODELS
+================================================================================
+
+Συνολικά Μοντέλα (Total Models): 96
+  - Baseline: 16
+  - Polynomial (Ridge + Lasso): 32
+  - Dimensionality Reduction (PCA + CFS + SFS): 48
+
+================================================================================
+TOP 10 ΜΟΝΤΕΛΑ ΣΥΝΟΛΙΚΑ (TOP 10 MODELS OVERALL)
+================================================================================
+
+1. LR_sigma3_12lags
+   Approach: Baseline (LinearRegression)
+   Config: sigma3, 12 lags
+   Val RMSE: $0.06, Val R²: 1.0000
+
+2. LR_SFS_sigma3_12lags
+   Approach: DimRed (SFS)
+   Config: sigma3, 12 lags
+   Val RMSE: $0.06, Val R²: 1.0000
+
+3. LR_SFS_sigma3_9lags
+   Approach: DimRed (SFS)
+   Config: sigma3, 9 lags
+   Val RMSE: $0.06, Val R²: 1.0000
+
+4. LR_sigma3_9lags
+   Approach: Baseline (LinearRegression)
+   Config: sigma3, 9 lags
+   Val RMSE: $0.06, Val R²: 1.0000
+
+5. LR_sigma3_6lags
+   Approach: Baseline (LinearRegression)
+   Config: sigma3, 6 lags
+   Val RMSE: $0.27, Val R²: 1.0000
+
+6. LR_SFS_sigma3_6lags
+   Approach: DimRed (SFS)
+   Config: sigma3, 6 lags
+   Val RMSE: $0.28, Val R²: 1.0000
+
+7. LR_sigma2_12lags
+   Approach: Baseline (LinearRegression)
+   Config: sigma2, 12 lags
+   Val RMSE: $0.54, Val R²: 1.0000
+
+8. LR_SFS_sigma2_12lags
+   Approach: DimRed (SFS)
+   Config: sigma2, 12 lags
+   Val RMSE: $0.56, Val R²: 1.0000
+
+9. LR_sigma2_9lags
+   Approach: Baseline (LinearRegression)
+   Config: sigma2, 9 lags
+   Val RMSE: $0.93, Val R²: 0.9999
+
+10. LR_SFS_sigma2_9lags
+   Approach: DimRed (SFS)
+   Config: sigma2, 9 lags
+   Val RMSE: $0.93, Val R²: 0.9999
+
+================================================================================
+ΚΑΛΥΤΕΡΟ ΑΝΑ ΠΡΟΣΕΓΓΙΣΗ (BEST BY APPROACH)
+================================================================================
+
+BASELINE:
+   Model: LR_sigma3_12lags
+   Config: sigma3, 12 lags
+   Val RMSE: $0.06, Val R²: 1.0000
+
+POLYNOMIAL:
+   Model: Ridge_sigma3_6lags
+   Regularization: Ridge (L2), Alpha: 0.01
+   Config: sigma3, 6 lags
+   Val RMSE: $5.19, Val R²: 0.9944
+
+DIMENSIONALITY REDUCTION:
+   Model: LR_SFS_sigma3_12lags
+   Method: SFS
+   Config: sigma3, 12 lags
+   Val RMSE: $0.06, Val R²: 1.0000
+
+================================================================================

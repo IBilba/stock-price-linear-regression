@@ -1,0 +1,27 @@
+======================================================================
+ΚΑΛΥΤΕΡΟ POLYNOMIAL ΜΟΝΤΕΛΟ (BEST POLYNOMIAL MODEL)
+======================================================================
+
+Model Name: Ridge_sigma3_6lags
+Regularization: Ridge (L2)
+Smoothing: sigma3
+N_Lags: 6
+Alpha: 0.01
+Polynomial Features: 90
+
+Validation Metrics:
+  RMSE: $5.19
+  MAE:  $4.26
+  R²:   0.9944
+
+Training Metrics:
+  RMSE: $1.25
+
+======================================================================
+ΣΥΓΚΡΙΣΗ ΜΕ BASELINE (COMPARISON WITH BASELINE)
+======================================================================
+
+Baseline Best Val RMSE: $0.06
+Polynomial Best Val RMSE: $5.19
+Improvement: $-5.13 (-8328.28%)
+======================================================================
