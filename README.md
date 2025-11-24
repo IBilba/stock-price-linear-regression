@@ -24,6 +24,42 @@ This project implements a comprehensive machine learning pipeline to predict Net
 **Τομέας / Sector**: Communication Services  
 **Πηγή Δεδομένων / Data Source**: Alpha Vantage API
 
+---
+
+## ⚠️ ΣΗΜΑΝΤΙΚΗ ΣΗΜΕΙΩΣΗ ALPHA VANTAGE API / IMPORTANT ALPHA VANTAGE API NOTE
+
+**🔴 Για Δωρεάν API Keys / For Free API Keys:**
+
+Το Alpha Vantage API έχει περιορισμούς για δωρεάν χρήστες. Η παράμετρος `outputsize=full` (που χρησιμοποιείται στον κώδικα) **απαιτεί premium (επί πληρωμή) API key**.  
+The Alpha Vantage API has limitations for free users. The `outputsize=full` parameter (used in the code) **requires a premium (paid) API key**.
+
+### Λύση / Solution:
+
+Πριν εκτελέσετε τον κώδικα με δωρεάν API key, αλλάξτε:  
+Before running the code with a free API key, change:
+
+```python
+# ❌ Αυτό ΔΕΝ λειτουργεί με δωρεάν key / This does NOT work with free key:
+url = f"https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol={symbol}&outputsize=full&apikey={api_key}"
+
+# ✅ Αλλάξτε σε / Change to:
+url = f"https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol={symbol}&outputsize=compact&apikey={api_key}"
+```
+
+**Αρχεία που χρειάζονται τροποποίηση / Files that need modification:**
+
+1. `step1_data_acquisition.py` (line ~78)
+2. `nflx_stock_prediction_complete_pipeline.ipynb` (data acquisition cell)
+
+**Σημείωση / Note:** Το `outputsize=compact` επιστρέφει μόνο τα τελευταία 100 data points (~3-4 μήνες), ενώ το `outputsize=full` επιστρέφει 20+ χρόνια δεδομένων.  
+The `outputsize=compact` returns only the latest 100 data points (~3-4 months), while `outputsize=full` returns 20+ years of data.
+
+**📓 Σημαντικό για το Notebook / Important about the Notebook:**  
+Το `nflx_stock_prediction_complete_pipeline.ipynb` **έχει ήδη εκτελεστεί** και τα output cells περιέχουν αποτελέσματα από εκπαίδευση με **πλήρη δεδομένα 20+ ετών** (χρησιμοποιήθηκε `outputsize=full`). Αν εκτελέσετε ξανά το notebook με δωρεάν API key και `outputsize=compact`, τα αποτελέσματα θα είναι διαφορετικά λόγω του περιορισμένου dataset.  
+The `nflx_stock_prediction_complete_pipeline.ipynb` **has already been executed** and the output cells contain results from training with **full 20+ years of data** (using `outputsize=full`). If you re-run the notebook with a free API key and `outputsize=compact`, the results will differ due to the limited dataset.
+
+---
+
 ## ΣΥΝΟΛΙΚΑ ΑΠΟΤΕΛΕΣΜΑΤΑ / COMPREHENSIVE RESULTS
 
 ### 📊 Μοντέλα που Αναλύθηκαν / Models Analyzed

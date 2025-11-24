@@ -491,6 +491,26 @@
 
 Τα ημερήσια δεδομένα μετατράπηκαν σε μηνιαίους μέσους όρους για τη μείωση του θορύβου (noise reduction) και την καλύτερη ανίχνευση μακροχρόνιων τάσεων (long-term trends). % chktex 19
 
+\begin{tcolorbox}[colback=yellow!10!white,colframe=orange!75!black,title=\textbf{Σημαντική Σημείωση για Δωρεάν API Keys / Important Note for Free API Keys}]
+    \textbf{Ελληνικά:} Η παράμετρος \texttt{outputsize=full} απαιτεί premium (επί πληρωμή) API key. Για δωρεάν API keys, χρησιμοποιήστε \texttt{\textbf{outputsize=compact}} αντί για \texttt{outputsize=full}. Το \texttt{compact} επιστρέφει τα τελευταία 100 data points (\textasciitilde3--4 μήνες ημερήσιων δεδομένων). % chktex 19
+
+    \textbf{English:} The parameter \texttt{outputsize=full} requires a premium (paid) API key. For free API keys, use \texttt{\textbf{outputsize=compact}} instead of \texttt{outputsize=full}. The \texttt{compact} option returns the latest 100 data points (\textasciitilde3--4 months of daily data).
+
+    \textbf{Τροποποίηση Κώδικα / Code Modification:} % chktex 19
+    \begin{verbatim}
+# Αλλάξτε από (Change from):
+outputsize=full
+# Σε (To):
+outputsize=compact
+\end{verbatim}
+
+    \textbf{Σημείωση για το Notebook:} Το \texttt{nflx\_stock\_prediction\_complete\_pipeline.ipynb} έχει ήδη εκτελεστεί με πλήρη δεδομένα 20+ ετών (\texttt{outputsize=full}). Τα output cells δείχνουν αποτελέσματα από αυτήν την εκπαίδευση.
+
+    \textbf{Note about Notebook:} The \texttt{nflx\_stock\_prediction\_complete\_pipeline.ipynb} has already been executed with full 20+ years of data (\texttt{outputsize=full}). The output cells show results from this training.
+\end{tcolorbox}
+
+Η παράμετρος \texttt{outputsize=full} επιτρέπει την ανάκτηση 20+ ετών ιστορικών δεδομένων (μόνο για premium keys). % chktex 19
+
 \section{Διάρθωση Αναφοράς}
 
 Η αναφορά οργανώνεται ως εξής:
@@ -863,7 +883,25 @@ https://www.alphavantage.co/query?
     apikey=<API_KEY>
 \end{verbatim}
 
-Η παράμετρος \texttt{outputsize=full} επιτρέπει την ανάκτηση 20+ ετών ιστορικών δεδομένων. % chktex 19
+\begin{tcolorbox}[colback=yellow!10!white,colframe=orange!75!black,title=\textbf{Σημαντική Σημείωση για Δωρεάν API Keys / Important Note for Free API Keys}]
+    \textbf{Ελληνικά:} Η παράμετρος \texttt{outputsize=full} απαιτεί premium (επί πληρωμή) API key. Για δωρεάν API keys, χρησιμοποιήστε \texttt{\textbf{outputsize=compact}} αντί για \texttt{outputsize=full}. Το \texttt{compact} επιστρέφει τα τελευταία 100 data points (\textasciitilde3--4 μήνες ημερήσιων δεδομένων). % chktex 19
+
+    \textbf{English:} The parameter \texttt{outputsize=full} requires a premium (paid) API key. For free API keys, use \texttt{\textbf{outputsize=compact}} instead of \texttt{outputsize=full}. The \texttt{compact} option returns the latest 100 data points (\textasciitilde3--4 months of daily data). 
+
+    \textbf{Τροποποίηση Κώδικα / Code Modification:} % chktex 19
+    \begin{verbatim}
+# Αλλάξτε από (Change from):
+outputsize=full
+# Σε (To):
+outputsize=compact
+\end{verbatim}
+
+    \textbf{Σημείωση για το Notebook:} Το \texttt{nflx\_stock\_prediction\_complete\_pipeline.ipynb} έχει ήδη εκτελεστεί με πλήρη δεδομένα 20+ ετών (\texttt{outputsize=full}). Τα output cells δείχνουν αποτελέσματα από αυτήν την εκπαίδευση. % chktex 19
+
+    \textbf{Note about Notebook:} The \texttt{nflx\_stock\_prediction\_complete\_pipeline.ipynb} has already been executed with full 20+ years of data (\texttt{outputsize=full}). The output cells show results from this training.
+\end{tcolorbox}
+
+Η παράμετρος \texttt{outputsize=full} επιτρέπει την ανάκτηση 20+ ετών ιστορικών δεδομένων (μόνο για premium keys). % chktex 19
 
 \subsection{Μετατροπή σε Μηνιαία Δεδομένα} % chktex 19
 
@@ -2523,6 +2561,22 @@ api_key=your_api_key_here
 \end{tcolorbox}
 
 Λάβετε δωρεάν API key από: \href{https://www.alphavantage.co/support/\#api-key}{Alpha Vantage} % chktex 19
+
+\begin{tcolorbox}[colback=red!5!white,colframe=red!75!black,title=\textbf{{\fontencoding{U}\fontfamily{futs}\selectfont\char 49\relax} ΣΗΜΑΝΤΙΚΟ ΓΙΑ ΔΩΡΕΑΝ API KEYS / IMPORTANT FOR FREE API KEYS}]
+    Αν χρησιμοποιείτε \textbf{δωρεάν} API key, πρέπει να αλλάξετε την παράμετρο \texttt{outputsize=full} σε \texttt{\textbf{outputsize=compact}} στα αρχεία:
+
+    If using a \textbf{free} API key, you must change the parameter
+    \texttt{outputsize=full} to \texttt{\textbf{outputsize=compact}} in the files:
+
+    \begin{itemize}
+        \item \texttt{step1\_data\_acquisition.py} (γραμμή / line \textasciitilde78)
+        \item \texttt{nflx\_stock\_prediction\_complete\_pipeline.ipynb} (κελί συλλογής δεδομένων / data acquisition cell)
+    \end{itemize}
+
+    \textbf{Λόγος / Reason:} Το \texttt{outputsize=full} απαιτεί premium API key. Το \texttt{compact} επιστρέφει τα τελευταία 100 data points.
+
+    \texttt{outputsize=full} requires a premium API key. \texttt{compact} returns the latest 100 data points.
+\end{tcolorbox}
 
 \section{Running Scripts vs Notebook}
 
