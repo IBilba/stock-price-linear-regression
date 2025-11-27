@@ -76,7 +76,7 @@ The `nflx_stock_prediction_complete_pipeline.ipynb` **has already been executed*
 
 - **Μοντέλο / Model**: LR_sigma3_12lags (Linear Regression)
 - **Προεπεξεργασία / Preprocessing**: Gaussian Smoothing (σ=3)
-- **Παράθυρο Υστέρησης / Lag Window**: 12 μήνες / months
+- **Παράθυρο Καθυστέρησης / Lag Window**: 12 μήνες / months
 - **Χαρακτηριστικά / Features**: 24 (12 close price lags + 12 volume lags)
 - **Training RMSE**: $0.06
 - **Training R²**: 0.9999
@@ -130,7 +130,7 @@ stock-price-linear-regression/
 │                                                   # Complete Jupyter Notebook Pipeline (91 cells)
 │
 ├── step1_data_acquisition.py          # Συλλογή & προεπεξεργασία δεδομένων / Data fetching & preprocessing
-├── step2_feature_engineering.py       # Δημιουργία χαρακτηριστικών με υστέρηση / Lagged feature creation
+├── step2_feature_engineering.py       # Δημιουργία χαρακτηριστικών με καθυστέρηση / Lagged feature creation
 ├── step3_baseline_linear_regression.py # Εργασία Α / Task A implementation
 ├── step4_polynomial_regression_regularization.py # Εργασία Β / Task B
 ├── step5_dimensionality_reduction.py  # Εργασία Γ / Task C implementation
@@ -485,8 +485,8 @@ The **[`nflx_stock_prediction_complete_pipeline.ipynb`](nflx_stock_prediction_co
 
 ### 2. Δημιουργία Χαρακτηριστικών / Feature Engineering
 
-- **Χαρακτηριστικά με Υστέρηση / Lagged Features**: close_t-1, close_t-2, ..., close_t-N & volume_t-1, ..., volume_t-N
-- **Παράθυρα Υστέρησης που Δοκιμάστηκαν / Lag Windows Tested**: 3, 6, 9, 12 μήνες / months
+- **Χαρακτηριστικά με Καθυστέρηση / Lagged Features**: close_t-1, close_t-2, ..., close_t-N & volume_t-1, ..., volume_t-N
+- **Παράθυρα Καθυστέρησης που Δοκιμάστηκαν / Lag Windows Tested**: 3, 6, 9, 12 μήνες / months
 - **Διαίρεση Δεδομένων / Data Split**:
   - Εκπαίδευση / Training: < 2025 (260-269 δείγματα / samples)
   - Επικύρωση / Validation: 2025 (11 δείγματα / samples)
@@ -566,7 +566,7 @@ The **[`nflx_stock_prediction_complete_pipeline.ipynb`](nflx_stock_prediction_co
 - Best Validation RMSE: **$0.06** (sigma3, 12 lags)
 - Significant improvement over raw data configurations
 
-### 2. Παράθυρο Υστέρησης / Lag Window
+### 2. Παράθυρο Καθυστέρησης / Lag Window
 
 ✅ **12 μήνες είναι βέλτιστο / 12 months is optimal**
 
